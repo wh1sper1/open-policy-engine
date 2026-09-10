@@ -1,0 +1,226 @@
+[
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-17471",
+    "title": "Procurement List; Additions and Deletions",
+    "keyword": "3d printer",
+    "url": "https://www.federalregister.gov/documents/2026/08/27/2026-17471/procurement-list-additions-and-deletions"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-17437",
+    "title": "International Trademark Classification Changes",
+    "keyword": "3d printer",
+    "url": "https://www.federalregister.gov/documents/2026/08/26/2026-17437/international-trademark-classification-changes"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-17238",
+    "title": "Ballot Mail for Federal Elections",
+    "keyword": "3d printer",
+    "url": "https://www.federalregister.gov/documents/2026/08/26/2026-17238/ballot-mail-for-federal-elections"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-18370",
+    "title": "Securing the United States Bulk-Power System",
+    "keyword": "encryption",
+    "url": "https://www.federalregister.gov/documents/2026/09/09/2026-18370/securing-the-united-states-bulk-power-system"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-18316",
+    "title": "Privacy Act of 1974; System of Records",
+    "keyword": "encryption",
+    "url": "https://www.federalregister.gov/documents/2026/09/09/2026-18316/privacy-act-of-1974-system-of-records"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-18190",
+    "title": "Transfer Agent Rules",
+    "keyword": "encryption",
+    "url": "https://www.federalregister.gov/documents/2026/09/04/2026-18190/transfer-agent-rules"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-18370",
+    "title": "Securing the United States Bulk-Power System",
+    "keyword": "telemetry",
+    "url": "https://www.federalregister.gov/documents/2026/09/09/2026-18370/securing-the-united-states-bulk-power-system"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-17980",
+    "title": "Arms Sales Notification",
+    "keyword": "telemetry",
+    "url": "https://www.federalregister.gov/documents/2026/09/02/2026-17980/arms-sales-notification"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-17567",
+    "title": "Arms Sales Notification",
+    "keyword": "telemetry",
+    "url": "https://www.federalregister.gov/documents/2026/08/28/2026-17567/arms-sales-notification"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-18382",
+    "title": "Hazardous Materials: Notice of Administrative Determination of Preemption for Common Law Tort Claims Concerning the Transportation of Gasoline",
+    "keyword": "right to repair",
+    "url": "https://www.federalregister.gov/documents/2026/09/09/2026-18382/hazardous-materials-notice-of-administrative-determination-of-preemption-for-common-law-tort-claims"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-18219",
+    "title": "Car Loan Interest Deduction",
+    "keyword": "right to repair",
+    "url": "https://www.federalregister.gov/documents/2026/09/08/2026-18219/car-loan-interest-deduction"
+  },
+  {
+    "source": "US Federal Register (GPO)",
+    "jurisdiction": "United States (US)",
+    "bill_id": "FR 2026-18055",
+    "title": "Airworthiness Directives; Airbus SAS Airplanes",
+    "keyword": "right to repair",
+    "url": "https://www.federalregister.gov/documents/2026/09/03/2026-18055/airworthiness-directives-airbus-sas-airplanes"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/news_story",
+    "title": "3D printers band together to help the front line",
+    "keyword": "3d printer",
+    "url": "https://www.gov.uk/government/news/3d-printers-band-together-to-help-the-front-line"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/research",
+    "title": "3D printers in schools: uses in the curriculum",
+    "keyword": "3d printer",
+    "url": "https://www.gov.uk/government/publications/3d-printers-in-schools-uses-in-the-curriculum"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/press_release",
+    "title": "New 3D printers to boost STEM and design teaching",
+    "keyword": "3d printer",
+    "url": "https://www.gov.uk/government/news/new-3d-printers-to-boost-stem-and-design-teaching"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/detailed_guide",
+    "title": "HM Land Registry email encryption",
+    "keyword": "encryption",
+    "url": "https://www.gov.uk/guidance/hm-land-registry-email-encryption"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/guidance",
+    "title": "End-to-end encryption and child safety",
+    "keyword": "encryption",
+    "url": "https://www.gov.uk/government/publications/end-to-end-encryption-and-child-safety"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/detailed_guide",
+    "title": "Set up government email services securely",
+    "keyword": "encryption",
+    "url": "https://www.gov.uk/guidance/set-up-government-email-services-securely"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/employment_tribunal_decision",
+    "title": "Mr M Morgan Lloyd v JFG Telemetry Ltd T/a KDG Telemetry and others: 1400518/2019",
+    "keyword": "telemetry",
+    "url": "https://www.gov.uk/employment-tribunal-decisions/mr-m-morgan-lloyd-v-jfg-telemetry-ltd-t-a-kdg-telemetry-and-others-1400518-2019"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/detailed_guide",
+    "title": "Monitoring ambient air: quality control and quality assurance",
+    "keyword": "telemetry",
+    "url": "https://www.gov.uk/guidance/monitoring-ambient-air-quality-control-and-quality-assurance"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/detailed_guide",
+    "title": "Device specific vigilance guidance: Cardiac Implantable Electronic Devices (CIEDs)",
+    "keyword": "telemetry",
+    "url": "https://www.gov.uk/guidance/device-specific-vigilance-guidance-cardiac-implantable-electronic-devices-cieds"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/guide",
+    "title": "Council housing",
+    "keyword": "right to repair",
+    "url": "https://www.gov.uk/council-housing"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/guide",
+    "title": "Private renting",
+    "keyword": "right to repair",
+    "url": "https://www.gov.uk/private-renting"
+  },
+  {
+    "source": "UK Parliament & GOV.UK",
+    "jurisdiction": "United Kingdom (UK)",
+    "bill_id": "UK-Policy/local_transaction",
+    "title": "Request a repair to a council property",
+    "keyword": "right to repair",
+    "url": "https://www.gov.uk/repair-council-property"
+  },
+  {
+    "source": "EUR-Lex (European Union)",
+    "jurisdiction": "European Union (EU)",
+    "bill_id": "EU-Directive/Reg-ARTIFICIAL INTELLIGENCE",
+    "title": "EU Directives & Regulatory Track: Artificial Intelligence",
+    "keyword": "artificial intelligence",
+    "url": "https://eur-lex.europa.eu/search.html?scope=EURLEX&text=artificial+intelligence"
+  },
+  {
+    "source": "EUR-Lex (European Union)",
+    "jurisdiction": "European Union (EU)",
+    "bill_id": "EU-Directive/Reg-CYBERSECURITY",
+    "title": "EU Directives & Regulatory Track: Cybersecurity",
+    "keyword": "cybersecurity",
+    "url": "https://eur-lex.europa.eu/search.html?scope=EURLEX&text=cybersecurity"
+  },
+  {
+    "source": "EUR-Lex (European Union)",
+    "jurisdiction": "European Union (EU)",
+    "bill_id": "EU-Directive/Reg-ENCRYPTION",
+    "title": "EU Directives & Regulatory Track: Encryption",
+    "keyword": "encryption",
+    "url": "https://eur-lex.europa.eu/search.html?scope=EURLEX&text=encryption"
+  },
+  {
+    "source": "Gaceta Parlamentaria (Mexico)",
+    "jurisdiction": "Mexico (MX)",
+    "bill_id": "LXVI-Gaceta-Tech",
+    "title": "Iniciativa sobre Ciberseguridad y Protección de Datos Personales",
+    "keyword": "cybersecurity",
+    "url": "https://gaceta.diputados.gob.mx/"
+  }
+]
