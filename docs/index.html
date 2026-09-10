@@ -17,7 +17,6 @@
             --primary-glow: rgba(56, 189, 248, 0.15);
             --text-main: #f1f5f9;
             --text-muted: #94a3b8;
-            --tag-bg: #0f172a;
             --badge-bg: #0284c7;
         }
 
@@ -34,9 +33,6 @@
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
         }
 
         .brand h1 {
@@ -78,9 +74,8 @@
             margin-top: 0.2rem;
         }
 
-        /* Section Styling */
         section { margin-bottom: 3rem; }
-        h2 { font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem; }
+        h2 { font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main); }
 
         /* Dossiers Grid */
         .dossiers-grid {
@@ -94,13 +89,10 @@
             border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 1.25rem;
-            transition: border-color 0.2s, transform 0.2s;
+            transition: border-color 0.2s;
         }
 
-        .dossier-card:hover {
-            border-color: var(--primary-accent);
-            transform: translateY(-2px);
-        }
+        .dossier-card:hover { border-color: var(--primary-accent); }
 
         .dossier-badge {
             background: rgba(16, 185, 129, 0.15);
@@ -109,10 +101,9 @@
             font-weight: 700;
             padding: 3px 8px;
             border-radius: 4px;
-            letter-spacing: 0.05em;
         }
 
-        .dossier-card h3 { font-size: 1rem; margin-top: 0.5rem; margin-bottom: 0.75rem; color: var(--text-main); }
+        .dossier-card h3 { font-size: 1rem; margin-top: 0.5rem; margin-bottom: 0.75rem; }
         .dossier-card pre {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.82rem;
@@ -125,7 +116,7 @@
             overflow-y: auto;
         }
 
-        /* Search & Controls */
+        /* Search Controls */
         .controls-bar {
             display: flex;
             gap: 1rem;
@@ -141,19 +132,17 @@
             border-radius: 8px;
             font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.2s;
         }
 
         .search-input { flex: 1; min-width: 260px; }
-        .search-input:focus, .select-filter:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px var(--primary-glow); }
+        .search-input:focus, .select-filter:focus { border-color: var(--primary-accent); }
 
-        /* Radar Table */
+        /* Table */
         .table-container {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
@@ -165,10 +154,9 @@
             border-bottom: 1px solid var(--border-color);
             text-transform: uppercase;
             font-size: 0.75rem;
-            letter-spacing: 0.05em;
         }
 
-        td { padding: 14px 18px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+        td { padding: 14px 18px; border-bottom: 1px solid var(--border-color); }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: var(--bg-hover); }
 
@@ -207,13 +195,9 @@
             text-decoration: none;
             font-weight: 500;
             font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            transition: color 0.15s;
         }
 
-        .action-btn:hover { color: #7dd3fc; text-decoration: underline; }
+        .action-btn:hover { text-decoration: underline; }
         .source-cell { max-width: 180px; }
         .title-cell { max-width: 380px; line-height: 1.4; }
     </style>
@@ -229,11 +213,11 @@
 
     <div class="metrics-grid">
         <div class="metric-card">
-            <div class="num">160</div>
+            <div class="num">139</div>
             <div class="label">Live Scraped Docket Items</div>
         </div>
         <div class="metric-card">
-            <div class="num">36</div>
+            <div class="num">35</div>
             <div class="label">Jurisdictions Monitored</div>
         </div>
         <div class="metric-card">
@@ -272,8 +256,8 @@
         <div class="controls-bar">
             <input type="text" id="searchInput" class="search-input" onkeyup="filterRadar()" placeholder="⚡ Search by keyword, title, bill ID, or source...">
             <select id="jurisdictionFilter" class="select-filter" onchange="filterRadar()">
-                <option value="ALL">All Jurisdictions (36)</option>
-                <option value="Alabama">Alabama</option><option value="Alaska">Alaska</option><option value="Australia (AU)">Australia (AU)</option><option value="Brazil (BR)">Brazil (BR)</option><option value="California">California</option><option value="European Union (EU)">European Union (EU)</option><option value="Florida">Florida</option><option value="Hawaii">Hawaii</option><option value="Illinois">Illinois</option><option value="India (IN)">India (IN)</option><option value="Israel (IL)">Israel (IL)</option><option value="Japan (JP)">Japan (JP)</option><option value="Kentucky">Kentucky</option><option value="Louisiana">Louisiana</option><option value="Mexico (MX)">Mexico (MX)</option><option value="Michigan">Michigan</option><option value="Minnesota">Minnesota</option><option value="Mississippi">Mississippi</option><option value="Missouri">Missouri</option><option value="Montana">Montana</option><option value="New York">New York</option><option value="New Zealand (NZ)">New Zealand (NZ)</option><option value="Ohio">Ohio</option><option value="Oklahoma">Oklahoma</option><option value="Oregon">Oregon</option><option value="Pennsylvania">Pennsylvania</option><option value="Russia (RU)">Russia (RU)</option><option value="Singapore (SG)">Singapore (SG)</option><option value="South Korea (KR)">South Korea (KR)</option><option value="Switzerland (CH)">Switzerland (CH)</option><option value="Taiwan (TW)">Taiwan (TW)</option><option value="Texas">Texas</option><option value="United Kingdom (UK)">United Kingdom (UK)</option><option value="United States (US)">United States (US)</option><option value="Washington">Washington</option><option value="za">za</option>
+                <option value="ALL">All Jurisdictions (35)</option>
+                <option value="Alabama">Alabama</option><option value="Alaska">Alaska</option><option value="Australia (AU)">Australia (AU)</option><option value="Brazil (BR)">Brazil (BR)</option><option value="California">California</option><option value="European Union (EU)">European Union (EU)</option><option value="Florida">Florida</option><option value="Hawaii">Hawaii</option><option value="Illinois">Illinois</option><option value="India (IN)">India (IN)</option><option value="Israel (IL)">Israel (IL)</option><option value="Japan (JP)">Japan (JP)</option><option value="Louisiana">Louisiana</option><option value="Mexico (MX)">Mexico (MX)</option><option value="Michigan">Michigan</option><option value="Minnesota">Minnesota</option><option value="Mississippi">Mississippi</option><option value="Missouri">Missouri</option><option value="Montana">Montana</option><option value="New York">New York</option><option value="New Zealand (NZ)">New Zealand (NZ)</option><option value="Ohio">Ohio</option><option value="Oklahoma">Oklahoma</option><option value="Oregon">Oregon</option><option value="Pennsylvania">Pennsylvania</option><option value="Russia (RU)">Russia (RU)</option><option value="Singapore (SG)">Singapore (SG)</option><option value="South Korea (KR)">South Korea (KR)</option><option value="Switzerland (CH)">Switzerland (CH)</option><option value="Taiwan (TW)">Taiwan (TW)</option><option value="Texas">Texas</option><option value="United Kingdom (UK)">United Kingdom (UK)</option><option value="United States (US)">United States (US)</option><option value="Washington">Washington</option><option value="za">za</option>
             </select>
         </div>
 
@@ -562,33 +546,6 @@
             <td><a href="https://openstates.org/oh/bills/136/HJR10/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr data-jurisdiction="Kentucky">
-            <td><span class="badge">Kentucky</span></td>
-            <td class="source-cell">US State</td>
-            <td><code class="bill-id">HB 709</code></td>
-            <td class="title-cell">AN ACT relating to respiratory care.</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://openstates.org/ky/bills/2026RS/HB709/" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="Illinois">
-            <td><span class="badge">Illinois</span></td>
-            <td class="source-cell">US State</td>
-            <td><code class="bill-id">SB 3775</code></td>
-            <td class="title-cell">TNC-SCHOOL TNC SERVICES</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://openstates.org/il/bills/104th/SB3775/" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="Montana">
-            <td><span class="badge">Montana</span></td>
-            <td class="source-cell">US State</td>
-            <td><code class="bill-id">HB 504</code></td>
-            <td class="title-cell">Expand livestock loss eligibility to include domestic bison</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://openstates.org/mt/bills/2025/HB504/" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
         <tr data-jurisdiction="Montana">
             <td><span class="badge">Montana</span></td>
             <td class="source-cell">US State</td>
@@ -596,60 +553,6 @@
             <td class="title-cell">Appropriations by budget amendment</td>
             <td><span class="kw-tag">telemetry</span></td>
             <td><a href="https://openstates.org/mt/bills/2025/HB4/" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="Montana">
-            <td><span class="badge">Montana</span></td>
-            <td class="source-cell">US State</td>
-            <td><code class="bill-id">HB 264</code></td>
-            <td class="title-cell">Generally revise wildlife location data subject to public information requests</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://openstates.org/mt/bills/2025/HB264/" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="Montana">
-            <td><span class="badge">Montana</span></td>
-            <td class="source-cell">US State</td>
-            <td><code class="bill-id">SB 372</code></td>
-            <td class="title-cell">Establish nurse safe staffing standards</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://openstates.org/mt/bills/2025/SB372/" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="Montana">
-            <td><span class="badge">Montana</span></td>
-            <td class="source-cell">US State</td>
-            <td><code class="bill-id">HB 356</code></td>
-            <td class="title-cell">Allow livestock loss reimbursement for black bear predation</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://openstates.org/mt/bills/2025/HB356/" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="Illinois">
-            <td><span class="badge">Illinois</span></td>
-            <td class="source-cell">US State</td>
-            <td><code class="bill-id">SB 2022</code></td>
-            <td class="title-cell">SAFE PATIENT LIMITS ACT</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://openstates.org/il/bills/104th/SB2022/" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="Hawaii">
-            <td><span class="badge">Hawaii</span></td>
-            <td class="source-cell">US State</td>
-            <td><code class="bill-id">HB 451</code></td>
-            <td class="title-cell">RELATING TO ECONOMIC DEVELOPMENT.</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://openstates.org/hi/bills/2026/HB451/" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="Hawaii">
-            <td><span class="badge">Hawaii</span></td>
-            <td class="source-cell">US State</td>
-            <td><code class="bill-id">HB 62</code></td>
-            <td class="title-cell">RELATING TO HEALTHCARE FACILITY NURSE STAFFING.</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://openstates.org/hi/bills/2026/HB62/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
         <tr data-jurisdiction="New York">
@@ -1133,33 +1036,6 @@
         <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
             <td class="source-cell">US Federal Register (GPO)</td>
-            <td><code class="bill-id">FR 2026-18370</code></td>
-            <td class="title-cell">Securing the United States Bulk-Power System</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/09/2026-18370/securing-the-united-states-bulk-power-system" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="United States (US)">
-            <td><span class="badge">United States (US)</span></td>
-            <td class="source-cell">US Federal Register (GPO)</td>
-            <td><code class="bill-id">FR 2026-17980</code></td>
-            <td class="title-cell">Arms Sales Notification</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/02/2026-17980/arms-sales-notification" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="United States (US)">
-            <td><span class="badge">United States (US)</span></td>
-            <td class="source-cell">US Federal Register (GPO)</td>
-            <td><code class="bill-id">FR 2026-17567</code></td>
-            <td class="title-cell">Arms Sales Notification</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/08/28/2026-17567/arms-sales-notification" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="United States (US)">
-            <td><span class="badge">United States (US)</span></td>
-            <td class="source-cell">US Federal Register (GPO)</td>
             <td><code class="bill-id">FR 2026-18382</code></td>
             <td class="title-cell">Hazardous Materials: Notice of Administrative Determination of Preemption for Common Law Tort Claims Concerning the Transportation of Gasoline</td>
             <td><span class="kw-tag">right to repair</span></td>
@@ -1236,24 +1112,6 @@
             <td class="title-cell">Set up government email services securely</td>
             <td><span class="kw-tag">encryption</span></td>
             <td><a href="https://www.gov.uk/guidance/set-up-government-email-services-securely" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="United Kingdom (UK)">
-            <td><span class="badge">United Kingdom (UK)</span></td>
-            <td class="source-cell">UK Parliament & GOV.UK</td>
-            <td><code class="bill-id">UK-Policy/employment_tribunal_decision</code></td>
-            <td class="title-cell">Mr M Morgan Lloyd v JFG Telemetry Ltd T/a KDG Telemetry and others: 1400518/2019</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://www.gov.uk/employment-tribunal-decisions/mr-m-morgan-lloyd-v-jfg-telemetry-ltd-t-a-kdg-telemetry-and-others-1400518-2019" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="United Kingdom (UK)">
-            <td><span class="badge">United Kingdom (UK)</span></td>
-            <td class="source-cell">UK Parliament & GOV.UK</td>
-            <td><code class="bill-id">UK-Policy/detailed_guide</code></td>
-            <td class="title-cell">Monitoring ambient air: quality control and quality assurance</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://www.gov.uk/guidance/monitoring-ambient-air-quality-control-and-quality-assurance" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
         <tr data-jurisdiction="United Kingdom (UK)">
@@ -1424,51 +1282,6 @@
             <td><code class="bill-id">/akn/za-cpt/act/by-law/2003/water-services</code></td>
             <td class="title-cell">Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
             <td><span class="kw-tag">encryption</span></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="za">
-            <td><span class="badge">za</span></td>
-            <td class="source-cell">Laws.Africa</td>
-            <td><code class="bill-id">/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</code></td>
-            <td class="title-cell">Constitution of Transport for Cape Town By-law, 2013</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="za">
-            <td><span class="badge">za</span></td>
-            <td class="source-cell">Laws.Africa</td>
-            <td><code class="bill-id">/akn/za-cpt/act/by-law/2010/graffiti</code></td>
-            <td class="title-cell">Graffiti By-law, 2010</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="za">
-            <td><span class="badge">za</span></td>
-            <td class="source-cell">Laws.Africa</td>
-            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/stormwater-management</code></td>
-            <td class="title-cell">Stormwater Management By-law, 2005</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="za">
-            <td><span class="badge">za</span></td>
-            <td class="source-cell">Laws.Africa</td>
-            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/filming</code></td>
-            <td class="title-cell">Filming By-law, 2005</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="za">
-            <td><span class="badge">za</span></td>
-            <td class="source-cell">Laws.Africa</td>
-            <td><code class="bill-id">/akn/za-cpt/act/by-law/2003/water-services</code></td>
-            <td class="title-cell">Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
-            <td><span class="kw-tag">telemetry</span></td>
             <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
@@ -1673,15 +1486,6 @@
         <tr data-jurisdiction="Australia (AU)">
             <td><span class="badge">Australia (AU)</span></td>
             <td class="source-cell">Parliament of Australia (APH)</td>
-            <td><code class="bill-id">APH-Bill-Telemetry</code></td>
-            <td class="title-cell">Australian Federal Tech Policy Docket: Telemetry</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=telemetry" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="Australia (AU)">
-            <td><span class="badge">Australia (AU)</span></td>
-            <td class="source-cell">Parliament of Australia (APH)</td>
             <td><code class="bill-id">APH-Bill-Right-To-Repair</code></td>
             <td class="title-cell">Australian Federal Tech Policy Docket: Right to repair</td>
             <td><span class="kw-tag">right to repair</span></td>
@@ -1713,15 +1517,6 @@
             <td class="title-cell">New Zealand PCO Docket on Encryption</td>
             <td><span class="kw-tag">encryption</span></td>
             <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_encryption_resel" target="_blank" class="action-btn">View Docket ↗</a></td>
-        </tr>
-        
-        <tr data-jurisdiction="New Zealand (NZ)">
-            <td><span class="badge">New Zealand (NZ)</span></td>
-            <td class="source-cell">New Zealand Legislation (PCO)</td>
-            <td><code class="bill-id">NZ-Act/TELEMETRY</code></td>
-            <td class="title-cell">New Zealand PCO Docket on Telemetry</td>
-            <td><span class="kw-tag">telemetry</span></td>
-            <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_telemetry_resel" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
         <tr data-jurisdiction="New Zealand (NZ)">

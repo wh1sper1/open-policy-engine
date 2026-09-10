@@ -1,6 +1,38 @@
 import os
 import json
 import glob
+import re
+
+# Non-tech terms that disqualify a bill from policy monitoring
+EXCLUDE_TERMS = [
+    r"\bnurse\b", r"\bnursing\b", r"\bhospital\b", r"\bpatient\b", r"\bclinical\b",
+    r"\blivestock\b", r"\bbison\b", r"\bwildlife\b", r"\bpredation\b", r"\bbear\b",
+    r"\bfish and game\b", r"\bhunting\b", r"\bherd\b"
+]
+
+# Context terms required for ambiguous triggers like "telemetry"
+TECH_CONTEXT_TERMS = [
+    "software", "app", "digital", "privacy", "user", "device", 
+    "hardware", "electronic", "computer", "network", "cloud"
+]
+
+def is_relevant_tech_policy(item):
+    """Filters out medical, agricultural, and wildlife false positives."""
+    title = item.get("title", "").lower()
+    keyword = item.get("keyword", "").lower()
+
+    # Reject if title contains medical or agricultural terms
+    for pattern in EXCLUDE_TERMS:
+        if re.search(pattern, title):
+            return False
+
+    # For ambiguous triggers like "telemetry", require actual tech/data context
+    if keyword == "telemetry":
+        has_tech_context = any(term in title for term in TECH_CONTEXT_TERMS)
+        if not has_tech_context:
+            return False
+
+    return True
 
 def load_dossiers():
     dossiers = []
@@ -22,7 +54,9 @@ def load_scraper_data():
             with open(fpath, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 if isinstance(data, list):
-                    all_findings.extend(data)
+                    # Filter out false positives
+                    valid_items = [item for item in data if is_relevant_tech_policy(item)]
+                    all_findings.extend(valid_items)
         except Exception as e:
             print(f"[-] Error loading {fpath}: {e}")
     return all_findings, len(json_files)
@@ -31,12 +65,12 @@ def build_html():
     dossiers = load_dossiers()
     findings, pipeline_count = load_scraper_data()
 
-    # Calculate live stats
+    # Metrics calculation
     jurisdictions = sorted(list(set(item.get("jurisdiction", "Global") for item in findings)))
     total_findings = len(findings)
     total_dossiers = len(dossiers)
 
-    # Build Dossier Cards
+    # Dossier cards HTML
     dossier_html = ""
     for d in dossiers:
         dossier_html += f"""
@@ -49,7 +83,7 @@ def build_html():
         </div>
         """
 
-    # Build Table Rows & Jurisdiction Filter Options
+    # Radar table rows
     table_rows = ""
     for item in findings:
         jur = item.get('jurisdiction', 'Global')
@@ -85,7 +119,6 @@ def build_html():
             --primary-glow: rgba(56, 189, 248, 0.15);
             --text-main: #f1f5f9;
             --text-muted: #94a3b8;
-            --tag-bg: #0f172a;
             --badge-bg: #0284c7;
         }}
 
@@ -102,9 +135,6 @@ def build_html():
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
         }}
 
         .brand h1 {{
@@ -146,9 +176,8 @@ def build_html():
             margin-top: 0.2rem;
         }}
 
-        /* Section Styling */
         section {{ margin-bottom: 3rem; }}
-        h2 {{ font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem; }}
+        h2 {{ font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main); }}
 
         /* Dossiers Grid */
         .dossiers-grid {{
@@ -162,13 +191,10 @@ def build_html():
             border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 1.25rem;
-            transition: border-color 0.2s, transform 0.2s;
+            transition: border-color 0.2s;
         }}
 
-        .dossier-card:hover {{
-            border-color: var(--primary-accent);
-            transform: translateY(-2px);
-        }}
+        .dossier-card:hover {{ border-color: var(--primary-accent); }}
 
         .dossier-badge {{
             background: rgba(16, 185, 129, 0.15);
@@ -177,10 +203,9 @@ def build_html():
             font-weight: 700;
             padding: 3px 8px;
             border-radius: 4px;
-            letter-spacing: 0.05em;
         }}
 
-        .dossier-card h3 {{ font-size: 1rem; margin-top: 0.5rem; margin-bottom: 0.75rem; color: var(--text-main); }}
+        .dossier-card h3 {{ font-size: 1rem; margin-top: 0.5rem; margin-bottom: 0.75rem; }}
         .dossier-card pre {{
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.82rem;
@@ -193,7 +218,7 @@ def build_html():
             overflow-y: auto;
         }}
 
-        /* Search & Controls */
+        /* Search Controls */
         .controls-bar {{
             display: flex;
             gap: 1rem;
@@ -209,19 +234,17 @@ def build_html():
             border-radius: 8px;
             font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.2s;
         }}
 
         .search-input {{ flex: 1; min-width: 260px; }}
-        .search-input:focus, .select-filter:focus {{ border-color: var(--primary-accent); box-shadow: 0 0 0 3px var(--primary-glow); }}
+        .search-input:focus, .select-filter:focus {{ border-color: var(--primary-accent); }}
 
-        /* Radar Table */
+        /* Table */
         .table-container {{
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }}
 
         table {{ width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }}
@@ -233,10 +256,9 @@ def build_html():
             border-bottom: 1px solid var(--border-color);
             text-transform: uppercase;
             font-size: 0.75rem;
-            letter-spacing: 0.05em;
         }}
 
-        td {{ padding: 14px 18px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }}
+        td {{ padding: 14px 18px; border-bottom: 1px solid var(--border-color); }}
         tr:last-child td {{ border-bottom: none; }}
         tr:hover td {{ background: var(--bg-hover); }}
 
@@ -275,13 +297,9 @@ def build_html():
             text-decoration: none;
             font-weight: 500;
             font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            transition: color 0.15s;
         }}
 
-        .action-btn:hover {{ color: #7dd3fc; text-decoration: underline; }}
+        .action-btn:hover {{ text-decoration: underline; }}
         .source-cell {{ max-width: 180px; }}
         .title-cell {{ max-width: 380px; line-height: 1.4; }}
     </style>
@@ -381,7 +399,7 @@ def build_html():
     with open("docs/index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    print("✅ PolicyHorizon dashboard rebuilt successfully at: docs/index.html")
+    print("✅ Rebuilt PolicyHorizon dashboard at docs/index.html with false-positive filtering applied.")
 
 if __name__ == "__main__":
     build_html()
