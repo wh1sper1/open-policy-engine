@@ -1,0 +1,114 @@
+[
+  {
+    "source": "State Duma (SOZD)",
+    "jurisdiction": "Russia (RU)",
+    "bill_id": "Draft Bill (криптография)",
+    "title": "Russian Federal Legislative Activity Monitor: криптография",
+    "keyword": "криптография",
+    "url": "https://sozd.duma.gov.ru/search?q=криптография"
+  },
+  {
+    "source": "State Duma (SOZD)",
+    "jurisdiction": "Russia (RU)",
+    "bill_id": "Draft Bill (3D-принтер)",
+    "title": "Russian Federal Legislative Activity Monitor: 3D-принтер",
+    "keyword": "3D-принтер",
+    "url": "https://sozd.duma.gov.ru/search?q=3D-принтер"
+  },
+  {
+    "source": "State Duma (SOZD)",
+    "jurisdiction": "Russia (RU)",
+    "bill_id": "Draft Bill (кибербезопасность)",
+    "title": "Russian Federal Legislative Activity Monitor: кибербезопасность",
+    "keyword": "кибербезопасность",
+    "url": "https://sozd.duma.gov.ru/search?q=кибербезопасность"
+  },
+  {
+    "source": "State Duma (SOZD)",
+    "jurisdiction": "Russia (RU)",
+    "bill_id": "Draft Bill (телеметрия)",
+    "title": "Russian Federal Legislative Activity Monitor: телеметрия",
+    "keyword": "телеметрия",
+    "url": "https://sozd.duma.gov.ru/search?q=телеметрия"
+  },
+  {
+    "source": "State Duma (SOZD)",
+    "jurisdiction": "Russia (RU)",
+    "bill_id": "Draft Bill (шифрование)",
+    "title": "Russian Federal Legislative Activity Monitor: шифрование",
+    "keyword": "шифрование",
+    "url": "https://sozd.duma.gov.ru/search?q=шифрование"
+  },
+  {
+    "source": "Parliament of Australia (APH)",
+    "jurisdiction": "Australia (AU)",
+    "bill_id": "APH-Bill-3D-Printer",
+    "title": "Australian Federal Tech Policy Docket: 3d printer",
+    "keyword": "3d printer",
+    "url": "https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=3d printer"
+  },
+  {
+    "source": "Parliament of Australia (APH)",
+    "jurisdiction": "Australia (AU)",
+    "bill_id": "APH-Bill-Encryption",
+    "title": "Australian Federal Tech Policy Docket: Encryption",
+    "keyword": "encryption",
+    "url": "https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=encryption"
+  },
+  {
+    "source": "Parliament of Australia (APH)",
+    "jurisdiction": "Australia (AU)",
+    "bill_id": "APH-Bill-Telemetry",
+    "title": "Australian Federal Tech Policy Docket: Telemetry",
+    "keyword": "telemetry",
+    "url": "https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=telemetry"
+  },
+  {
+    "source": "Parliament of Australia (APH)",
+    "jurisdiction": "Australia (AU)",
+    "bill_id": "APH-Bill-Right-To-Repair",
+    "title": "Australian Federal Tech Policy Docket: Right to repair",
+    "keyword": "right to repair",
+    "url": "https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=right to repair"
+  },
+  {
+    "source": "Parliament of Australia (APH)",
+    "jurisdiction": "Australia (AU)",
+    "bill_id": "APH-Bill-Cybersecurity",
+    "title": "Australian Federal Tech Policy Docket: Cybersecurity",
+    "keyword": "cybersecurity",
+    "url": "https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=cybersecurity"
+  },
+  {
+    "source": "New Zealand Legislation (PCO)",
+    "jurisdiction": "New Zealand (NZ)",
+    "bill_id": "NZ-Act/3D-PRINTER",
+    "title": "New Zealand PCO Docket on 3d printer",
+    "keyword": "3d printer",
+    "url": "https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_3d printer_resel"
+  },
+  {
+    "source": "New Zealand Legislation (PCO)",
+    "jurisdiction": "New Zealand (NZ)",
+    "bill_id": "NZ-Act/ENCRYPTION",
+    "title": "New Zealand PCO Docket on Encryption",
+    "keyword": "encryption",
+    "url": "https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_encryption_resel"
+  },
+  {
+    "source": "New Zealand Legislation (PCO)",
+    "jurisdiction": "New Zealand (NZ)",
+    "bill_id": "NZ-Act/TELEMETRY",
+    "title": "New Zealand PCO Docket on Telemetry",
+    "keyword": "telemetry",
+    "url": "https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_telemetry_resel"
+  },
+  {
+    "source": "New Zealand Legislation (PCO)",
+    "jurisdiction": "New Zealand (NZ)",
+    "bill_id": "NZ-Act/RIGHT-TO-REPAIR",
+    "title": "New Zealand PCO Docket on Right to repair",
+    "keyword": "right to repair",
+    "url": "https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_right to repair_resel"
+  }
+]
