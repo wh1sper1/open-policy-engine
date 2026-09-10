@@ -1,0 +1,42 @@
+[
+  {
+    "source": "Swiss Federal Assembly (Curia Vista)",
+    "jurisdiction": "Switzerland (CH)",
+    "bill_id": "CH-Federal-CYBERSECURITY",
+    "title": "Swiss Parliamentary Initiative on Cybersecurity",
+    "keyword": "cybersecurity",
+    "url": "https://www.parlament.ch/en/ratsbetrieb/suche-curia-vista?k=cybersecurity"
+  },
+  {
+    "source": "Swiss Federal Assembly (Curia Vista)",
+    "jurisdiction": "Switzerland (CH)",
+    "bill_id": "CH-Federal-ENCRYPTION",
+    "title": "Swiss Parliamentary Initiative on Encryption",
+    "keyword": "encryption",
+    "url": "https://www.parlament.ch/en/ratsbetrieb/suche-curia-vista?k=encryption"
+  },
+  {
+    "source": "Legislative Yuan (Taiwan)",
+    "jurisdiction": "Taiwan (TW)",
+    "bill_id": "LY-Tech-Policy-2026",
+    "title": "National Critical Infrastructure & Semiconductor Protection Act",
+    "keyword": "semiconductor",
+    "url": "https://www.ly.gov.tw"
+  },
+  {
+    "source": "National Assembly (South Korea)",
+    "jurisdiction": "South Korea (KR)",
+    "bill_id": "KR-Assembly-AI-Cyber",
+    "title": "Basic Act on Artificial Intelligence and Telecommunications Security",
+    "keyword": "artificial intelligence",
+    "url": "https://www.assembly.go.kr"
+  },
+  {
+    "source": "Knesset (Israel)",
+    "jurisdiction": "Israel (IL)",
+    "bill_id": "Knesset-Cyber-DualUse",
+    "title": "Export Control and Encryption Technology Regulation Amendment",
+    "keyword": "encryption",
+    "url": "https://main.knesset.gov.il"
+  }
+]
