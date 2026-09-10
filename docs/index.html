@@ -29,7 +29,7 @@
     <nav class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-[#00ff66] fa-shield-halved text-emerald-400 text-2xl"></i>
+                <i class="fa-solid fa-shield-halved text-emerald-400 text-2xl"></i>
                 <span class="font-bold text-xl tracking-wider text-slate-100">OPEN<span class="text-emerald-400">POLICY</span>ENGINE</span>
             </div>
             <div class="flex space-x-6 text-sm font-medium">
@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-            <!-- Findings Grid/Table -->
+            <!-- Findings Table -->
             <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-slate-300">
@@ -144,10 +144,10 @@
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
                     <span class="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">[VERIFIED]</span>
-                    <h3 class="text-lg font-bold text-white">01: Flipper Zero Import Bans & Dual-Use Restrictions</h3>
-                    <p class="text-slate-400 text-sm mt-1">Analysis of FCC/CBP import seizures, radio-frequency spectrum compliance, and hardware restrictions.</p>
+                    <h3 class="text-lg font-bold text-white">01: Restrictions on Single-Board Computers, Flipper Zero, & Dual-Use Hardware</h3>
+                    <p class="text-slate-400 text-sm mt-1">Analysis of regulatory holds, ISED/CBP import seizures, and export controls impacting Raspberry Pi / SBCs, HackRF One, and pen-testing tools.</p>
                 </div>
-                <a href="https://github.com/wh1sper1/open-policy-engine/tree/main/dossiers" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap">
+                <a href="https://github.com/wh1sper1/open-policy-engine/blob/main/dossiers/verified/01_flipper_zero_import_restrictions.md" target="_blank" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm transition whitespace-nowrap">
                     Read Whitepaper
                 </a>
             </div>
@@ -158,7 +158,7 @@
             <div class="bg-gradient-to-r from-emerald-950/40 to-slate-900 border border-emerald-500/30 rounded-2xl p-8 text-center md:text-left md:flex items-center justify-between gap-8">
                 <div>
                     <h2 class="text-2xl font-bold text-white mb-2">Submit Policy Intelligence</h2>
-                    <p class="text-slate-400 text-sm max-w-2xl">Spotted a new state bill restricting 3D printers? Found a vendor changing driver-signing policies or remote disablement terms? Submit a report directly into our CI pipeline.</p>
+                    <p class="text-slate-400 text-sm max-w-2xl">Spotted a new state bill restricting 3D printers or SBC hardware? Found a vendor changing driver-signing policies or remote disablement terms? Submit a report directly into our CI pipeline.</p>
                 </div>
                 <div class="mt-6 md:mt-0 flex flex-col sm:flex-row gap-3">
                     <a href="https://github.com/wh1sper1/open-policy-engine/issues/new?template=01_bill_submission.md" target="_blank" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2.5 rounded-lg text-sm transition">
