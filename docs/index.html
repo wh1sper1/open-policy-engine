@@ -3,1497 +3,1762 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Policy Engine — Threat & Legislative Dashboard</title>
+    <title>PolicyHorizon — Global Tech & Hardware Intelligence Radar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 2rem; }
-        h1 { color: #38bdf8; border-bottom: 2px solid #334155; padding-bottom: 0.5rem; }
-        h2 { color: #94a3b8; margin-top: 2rem; }
-        .card { background: #1e293b; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #334155; }
-        pre { white-space: pre-wrap; word-wrap: break-word; color: #cbd5e1; background: #0f172a; padding: 1rem; border-radius: 6px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: #1e293b; border-radius: 8px; overflow: hidden; }
-        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #334155; }
-        th { background: #334155; color: #38bdf8; font-weight: 600; }
-        tr:hover { background: #334155; }
-        a { color: #38bdf8; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .badge { background: #0284c7; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
-        code { background: #0f172a; padding: 2px 6px; border-radius: 4px; color: #f43f5e; }
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151d2a;
+            --bg-hover: #1e293b;
+            --border-color: #27354a;
+            --primary-accent: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.15);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --tag-bg: #0f172a;
+            --badge-bg: #0284c7;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 2rem 3rem;
+            line-height: 1.5;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .brand h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .brand h1 span { color: var(--primary-accent); }
+        .brand p { color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem; }
+
+        /* Metrics Bar */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+        }
+
+        .metric-card .num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+        }
+
+        .metric-card .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.2rem;
+        }
+
+        /* Section Styling */
+        section { margin-bottom: 3rem; }
+        h2 { font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem; }
+
+        /* Dossiers Grid */
+        .dossiers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .dossier-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .dossier-card:hover {
+            border-color: var(--primary-accent);
+            transform: translateY(-2px);
+        }
+
+        .dossier-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        .dossier-card h3 { font-size: 1rem; margin-top: 0.5rem; margin-bottom: 0.75rem; color: var(--text-main); }
+        .dossier-card pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            background: #0b0f19;
+            padding: 0.85rem;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        /* Search & Controls */
+        .controls-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input, .select-filter {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.65rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input { flex: 1; min-width: 260px; }
+        .search-input:focus, .select-filter:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 3px var(--primary-glow); }
+
+        /* Radar Table */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        th {
+            background: #1a2332;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        td { padding: 14px 18px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--bg-hover); }
+
+        .badge {
+            background: var(--badge-bg);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .bill-id {
+            font-family: 'JetBrains Mono', monospace;
+            background: #0f172a;
+            color: var(--primary-accent);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.82rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .kw-tag {
+            background: rgba(244, 63, 94, 0.15);
+            color: #f43f5e;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+
+        .action-btn {
+            color: var(--primary-accent);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.15s;
+        }
+
+        .action-btn:hover { color: #7dd3fc; text-decoration: underline; }
+        .source-cell { max-width: 180px; }
+        .title-cell { max-width: 380px; line-height: 1.4; }
     </style>
 </head>
 <body>
-    <h1>🛡️ Open Policy Engine Dashboard</h1>
-    <p>Automated global legislative monitoring and verified intelligence policy dossiers.</p>
 
-    <h2>📑 Verified Policy Dossiers (1)</h2>
-    
-        <div class="card">
-            <h3>📄 01_flipper_zero_import_restrictions.md</h3>
+    <header>
+        <div class="brand">
+            <h1>Policy<span>Horizon</span></h1>
+            <p>Global Technology & Dual-Use Hardware Regulatory Intelligence</p>
+        </div>
+    </header>
+
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="num">160</div>
+            <div class="label">Live Scraped Docket Items</div>
+        </div>
+        <div class="metric-card">
+            <div class="num">36</div>
+            <div class="label">Jurisdictions Monitored</div>
+        </div>
+        <div class="metric-card">
+            <div class="num">1</div>
+            <div class="label">Verified Intelligence Dossiers</div>
+        </div>
+        <div class="metric-card">
+            <div class="num">7</div>
+            <div class="label">Active Scraper Pipelines</div>
+        </div>
+    </div>
+
+    <section>
+        <h2>📑 Verified Policy Dossiers</h2>
+        <div class="dossiers-grid">
+            
+        <div class="dossier-card">
+            <div class="dossier-header">
+                <span class="dossier-badge">VERIFIED DOSSIER</span>
+                <h3>01_flipper_zero_import_restrictions.md</h3>
+            </div>
             <pre># Verified Dossier 01: Import Bans & Dual-Use Restrictions on Single-Board Computers and Pen-Testing Hardware
 
 **Taxonomy Status:** `[VERIFIED]`  
 **Primary Subjects:** Single-Board Computers (SBCs), Sub-GHz Transceivers, Software-Defined Radio (SDR), FCC Regulations, Export Controls  
 **Target Hardware:** Flipper Zero, HackRF One, Raspberry Pi / Orange Pi (SBCs), Wi-Fi Pineapple, BadUSB / Rubber Ducky  
-**Regulatory Bodies:** Innovation, Science and Economic Development Canada (ISED), US Custom...</pre>
+**Regulatory Bodies:** Innovation, Science...</pre>
         </div>
         
+        </div>
+    </section>
 
-    <h2>🌍 Live Global Scraper Monitor (160 Records)</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Jurisdiction</th>
-                <th>Source</th>
-                <th>Bill / Item ID</th>
-                <th>Title / Description</th>
-                <th>Keyword Trigger</th>
-                <th>Link</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-        <tr>
+    <section>
+        <h2>🌍 Global Legislative Radar</h2>
+        
+        <div class="controls-bar">
+            <input type="text" id="searchInput" class="search-input" onkeyup="filterRadar()" placeholder="⚡ Search by keyword, title, bill ID, or source...">
+            <select id="jurisdictionFilter" class="select-filter" onchange="filterRadar()">
+                <option value="ALL">All Jurisdictions (36)</option>
+                <option value="Alabama">Alabama</option><option value="Alaska">Alaska</option><option value="Australia (AU)">Australia (AU)</option><option value="Brazil (BR)">Brazil (BR)</option><option value="California">California</option><option value="European Union (EU)">European Union (EU)</option><option value="Florida">Florida</option><option value="Hawaii">Hawaii</option><option value="Illinois">Illinois</option><option value="India (IN)">India (IN)</option><option value="Israel (IL)">Israel (IL)</option><option value="Japan (JP)">Japan (JP)</option><option value="Kentucky">Kentucky</option><option value="Louisiana">Louisiana</option><option value="Mexico (MX)">Mexico (MX)</option><option value="Michigan">Michigan</option><option value="Minnesota">Minnesota</option><option value="Mississippi">Mississippi</option><option value="Missouri">Missouri</option><option value="Montana">Montana</option><option value="New York">New York</option><option value="New Zealand (NZ)">New Zealand (NZ)</option><option value="Ohio">Ohio</option><option value="Oklahoma">Oklahoma</option><option value="Oregon">Oregon</option><option value="Pennsylvania">Pennsylvania</option><option value="Russia (RU)">Russia (RU)</option><option value="Singapore (SG)">Singapore (SG)</option><option value="South Korea (KR)">South Korea (KR)</option><option value="Switzerland (CH)">Switzerland (CH)</option><option value="Taiwan (TW)">Taiwan (TW)</option><option value="Texas">Texas</option><option value="United Kingdom (UK)">United Kingdom (UK)</option><option value="United States (US)">United States (US)</option><option value="Washington">Washington</option><option value="za">za</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table id="radarTable">
+                <thead>
+                    <tr>
+                        <th>Jurisdiction</th>
+                        <th>Source</th>
+                        <th>Bill / Item ID</th>
+                        <th>Title / Summary</th>
+                        <th>Trigger Keyword</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+        <tr data-jurisdiction="New York">
             <td><span class="badge">New York</span></td>
-            <td>US State</td>
-            <td><b>S 10685</b></td>
-            <td>Enacts the "Fostering Optimal Classroom Use of Screens (FOCUS) act" to limit use of internet enabled devices and prioritize non-digital teaching methods</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/ny/bills/2025-2026/S10685/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">S 10685</code></td>
+            <td class="title-cell">Enacts the "Fostering Optimal Classroom Use of Screens (FOCUS) act" to limit use of internet enabled devices and prioritize non-digital teaching methods</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/ny/bills/2025-2026/S10685/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="California">
             <td><span class="badge">California</span></td>
-            <td>US State</td>
-            <td><b>SB 930</b></td>
-            <td>Student Test Taker Privacy Protection Act: end-to-end encryption.</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/ca/bills/20252026/SB930/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 930</code></td>
+            <td class="title-cell">Student Test Taker Privacy Protection Act: end-to-end encryption.</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/ca/bills/20252026/SB930/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Pennsylvania">
             <td><span class="badge">Pennsylvania</span></td>
-            <td>US State</td>
-            <td><b>HB 1396</b></td>
-            <td>An Act amending the act of June 3, 1937 (P.L.1333, No.320), known as the Pennsylvania Election Code, in preliminary provisions, further providing for definitions; in district election officers, further providing for compensation of district election officers; in election districts and polling places, providing for ballot drop boxes; in electronic voting systems, further providing for definitions and for supplies, preparation of the voting system and of polling places, providing for pre-election logic and accuracy testing, repealing provisions relating to statistical sample and providing for post-election ballot audit; providing for electronic poll books and for electronic poll books and election infrastructure equipment bonds; in preparation for and conduct of primaries and elections, further providing for manner of applying to vote, persons entitled to vote, voter's certificates, entries to be made in district register, numbered lists of voters and challenges and for deadline for receipt of valid voter registration application; providing for in-person early voting; in voting by qualified absentee electors, further providing for date of application for absentee ballot, for approval of application for absentee ballot, for envelopes for official absentee ballots and for voting by absentee electors; in voting by qualified mail-in electors, further providing for applications for official mail-in ballots, for date of application for mail-in ballot, for approval of application for mail-in ballot, for envelopes for official mail-in ballots and for voting by mail-in electors; in returns of primaries and elections, further providing for computation of returns by county board, certification and issuance of certificates of election; in Election Integrity Grant Program, further providing for funding for elections; in recounts and contests, further providing for opening ballot boxes upon petition of electors alleging fraud or error and deposit or bond, for recanvassing voting machines upon petition of electors alleging fraud or error and for correction of returns, decision not to be final and evidence for prosecution; in penalties, further providing for interference with primaries and elections, frauds and conspiracy; making an appropriation; and making an editorial change.
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 1396</code></td>
+            <td class="title-cell">An Act amending the act of June 3, 1937 (P.L.1333, No.320), known as the Pennsylvania Election Code, in preliminary provisions, further providing for definitions; in district election officers, further providing for compensation of district election officers; in election districts and polling places, providing for ballot drop boxes; in electronic voting systems, further providing for definitions and for supplies, preparation of the voting system and of polling places, providing for pre-election logic and accuracy testing, repealing provisions relating to statistical sample and providing for post-election ballot audit; providing for electronic poll books and for electronic poll books and election infrastructure equipment bonds; in preparation for and conduct of primaries and elections, further providing for manner of applying to vote, persons entitled to vote, voter's certificates, entries to be made in district register, numbered lists of voters and challenges and for deadline for receipt of valid voter registration application; providing for in-person early voting; in voting by qualified absentee electors, further providing for date of application for absentee ballot, for approval of application for absentee ballot, for envelopes for official absentee ballots and for voting by absentee electors; in voting by qualified mail-in electors, further providing for applications for official mail-in ballots, for date of application for mail-in ballot, for approval of application for mail-in ballot, for envelopes for official mail-in ballots and for voting by mail-in electors; in returns of primaries and elections, further providing for computation of returns by county board, certification and issuance of certificates of election; in Election Integrity Grant Program, further providing for funding for elections; in recounts and contests, further providing for opening ballot boxes upon petition of electors alleging fraud or error and deposit or bond, for recanvassing voting machines upon petition of electors alleging fraud or error and for correction of returns, decision not to be final and evidence for prosecution; in penalties, further providing for interference with primaries and elections, frauds and conspiracy; making an appropriation; and making an editorial change.
  Amending Title 25 (Elections) of the Pennsylvania Consolidated Statutes, in registration system, further providing for SURE system; in voter registration, further providing for methods of voter registration, for application with driver's license application and for government agencies and for approval of registration applications; and, in changes in records, repealing provisions relating to removal notices, to transfer of registration and to change of enrollment of political party and further providing for death of registrant.</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/pa/bills/2025-2026/HB1396/" target="_blank">View Docket</a></td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/pa/bills/2025-2026/HB1396/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Ohio">
             <td><span class="badge">Ohio</span></td>
-            <td>US State</td>
-            <td><b>HB 96</b></td>
-            <td>Make state operating appropriations for FY 2026-27</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/oh/bills/136/HB96/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 96</code></td>
+            <td class="title-cell">Make state operating appropriations for FY 2026-27</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/oh/bills/136/HB96/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Ohio">
             <td><span class="badge">Ohio</span></td>
-            <td>US State</td>
-            <td><b>HB 195</b></td>
-            <td>Revise the Ohio Uniform Commercial Code</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/oh/bills/136/HB195/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 195</code></td>
+            <td class="title-cell">Revise the Ohio Uniform Commercial Code</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/oh/bills/136/HB195/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Ohio">
             <td><span class="badge">Ohio</span></td>
-            <td>US State</td>
-            <td><b>HB 247</b></td>
-            <td>Revise dog law, including dangerous and vicious dogs</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/oh/bills/136/HB247/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 247</code></td>
+            <td class="title-cell">Revise dog law, including dangerous and vicious dogs</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/oh/bills/136/HB247/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="New York">
             <td><span class="badge">New York</span></td>
-            <td>US State</td>
-            <td><b>A 11669</b></td>
-            <td>Enacts the "Fostering Optimal Classroom Use of Screens (FOCUS) act" to limit use of internet enabled devices and prioritize non-digital teaching methods</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/ny/bills/2025-2026/A11669/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">A 11669</code></td>
+            <td class="title-cell">Enacts the "Fostering Optimal Classroom Use of Screens (FOCUS) act" to limit use of internet enabled devices and prioritize non-digital teaching methods</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/ny/bills/2025-2026/A11669/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Oklahoma">
             <td><span class="badge">Oklahoma</span></td>
-            <td>US State</td>
-            <td><b>SB 1871</b></td>
-            <td>Social media; requiring certain age verification; mandating the segregation of certain user data; requiring certain parental consent. Emergency.</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/ok/bills/2026/SB1871/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 1871</code></td>
+            <td class="title-cell">Social media; requiring certain age verification; mandating the segregation of certain user data; requiring certain parental consent. Emergency.</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/ok/bills/2026/SB1871/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Michigan">
             <td><span class="badge">Michigan</span></td>
-            <td>US State</td>
-            <td><b>HB 6187</b></td>
-            <td>Financial institutions: mortgage brokers and lenders; consolidation of certain licensing statutes related to residential mortgages; make conforming changes in the identity theft protection act. Amends sec. 3 of 2004 PA 452 (MCL 445.63).   TIE BAR WITH: HB 6177'26</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/mi/bills/2025-2026/HB6187/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 6187</code></td>
+            <td class="title-cell">Financial institutions: mortgage brokers and lenders; consolidation of certain licensing statutes related to residential mortgages; make conforming changes in the identity theft protection act. Amends sec. 3 of 2004 PA 452 (MCL 445.63).   TIE BAR WITH: HB 6177'26</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/mi/bills/2025-2026/HB6187/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Florida">
             <td><span class="badge">Florida</span></td>
-            <td>US State</td>
-            <td><b>SB 480</b></td>
-            <td>Information Technology</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://openstates.org/fl/bills/2026/SB480/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 480</code></td>
+            <td class="title-cell">Information Technology</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://openstates.org/fl/bills/2026/SB480/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Illinois">
             <td><span class="badge">Illinois</span></td>
-            <td>US State</td>
-            <td><b>HB 3577</b></td>
-            <td>FIREARM OFFENSE ENHANCED PENAL</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/il/bills/104th/HB3577/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 3577</code></td>
+            <td class="title-cell">FIREARM OFFENSE ENHANCED PENAL</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/il/bills/104th/HB3577/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Illinois">
             <td><span class="badge">Illinois</span></td>
-            <td>US State</td>
-            <td><b>SB 1936</b></td>
-            <td>FIREARM OFFENSE ENHANCED PENAL</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/il/bills/104th/SB1936/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 1936</code></td>
+            <td class="title-cell">FIREARM OFFENSE ENHANCED PENAL</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/il/bills/104th/SB1936/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Minnesota">
             <td><span class="badge">Minnesota</span></td>
-            <td>US State</td>
-            <td><b>HF 3407</b></td>
-            <td>Sale and possession of ghost guns prohibited, 3D printing of guns limited to federally licensed firearms manufacturers, distribution of 3D printer firearm design files prohibited, firearm serial numbers required, public notice required, and limits on assembling firearms without license provided.</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/mn/bills/2025-2026/HF3407/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HF 3407</code></td>
+            <td class="title-cell">Sale and possession of ghost guns prohibited, 3D printing of guns limited to federally licensed firearms manufacturers, distribution of 3D printer firearm design files prohibited, firearm serial numbers required, public notice required, and limits on assembling firearms without license provided.</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/mn/bills/2025-2026/HF3407/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Oklahoma">
             <td><span class="badge">Oklahoma</span></td>
-            <td>US State</td>
-            <td><b>SB 505</b></td>
-            <td>Definitions and general provisions; declaring protection of certain rights related to 3D printing. Effective date.</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/ok/bills/2026/SB505/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 505</code></td>
+            <td class="title-cell">Definitions and general provisions; declaring protection of certain rights related to 3D printing. Effective date.</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/ok/bills/2026/SB505/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Oregon">
             <td><span class="badge">Oregon</span></td>
-            <td>US State</td>
-            <td><b>SB 1208</b></td>
-            <td>Relating to plastics.</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/or/bills/2025R1/SB1208/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 1208</code></td>
+            <td class="title-cell">Relating to plastics.</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/or/bills/2025R1/SB1208/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Texas">
             <td><span class="badge">Texas</span></td>
-            <td>US State</td>
-            <td><b>HR 1261</b></td>
-            <td>Commemorating the opening of the Advanced Manufacturing and Aerospace Center at The University of Texas at El Paso.</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/tx/bills/89R/HR1261/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HR 1261</code></td>
+            <td class="title-cell">Commemorating the opening of the Advanced Manufacturing and Aerospace Center at The University of Texas at El Paso.</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/tx/bills/89R/HR1261/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Texas">
             <td><span class="badge">Texas</span></td>
-            <td>US State</td>
-            <td><b>HR 256</b></td>
-            <td>Commemorating the 25th anniversary of Harmony Public Schools.</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/tx/bills/89R/HR256/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HR 256</code></td>
+            <td class="title-cell">Commemorating the 25th anniversary of Harmony Public Schools.</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/tx/bills/89R/HR256/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Texas">
             <td><span class="badge">Texas</span></td>
-            <td>US State</td>
-            <td><b>SR 90</b></td>
-            <td>Recognizing Harmony Public Schools on the occasion of its 25th anniversary.</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/tx/bills/89R/SR90/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SR 90</code></td>
+            <td class="title-cell">Recognizing Harmony Public Schools on the occasion of its 25th anniversary.</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/tx/bills/89R/SR90/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Oklahoma">
             <td><span class="badge">Oklahoma</span></td>
-            <td>US State</td>
-            <td><b>SB 505</b></td>
-            <td>Definitions and general provisions; declaring protection of certain rights related to 3D printing. Effective date.</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/ok/bills/2025/SB505/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 505</code></td>
+            <td class="title-cell">Definitions and general provisions; declaring protection of certain rights related to 3D printing. Effective date.</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/ok/bills/2025/SB505/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Mississippi">
             <td><span class="badge">Mississippi</span></td>
-            <td>US State</td>
-            <td><b>HB 850</b></td>
-            <td>Unserialized firearms ("ghost guns"); create crime of possession of.</td>
-            <td><code>3D printer</code></td>
-            <td><a href="https://openstates.org/ms/bills/2025/HB850/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 850</code></td>
+            <td class="title-cell">Unserialized firearms ("ghost guns"); create crime of possession of.</td>
+            <td><span class="kw-tag">3D printer</span></td>
+            <td><a href="https://openstates.org/ms/bills/2025/HB850/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Alabama">
             <td><span class="badge">Alabama</span></td>
-            <td>US State</td>
-            <td><b>HB 393</b></td>
-            <td>Tax abatement and tax incentive programs, NAICS Code references and definitions updated to latest terms</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/al/bills/2026rs/HB393/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 393</code></td>
+            <td class="title-cell">Tax abatement and tax incentive programs, NAICS Code references and definitions updated to latest terms</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/al/bills/2026rs/HB393/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Alaska">
             <td><span class="badge">Alaska</span></td>
-            <td>US State</td>
-            <td><b>SB 24</b></td>
-            <td>An Act relating to tobacco, tobacco products, electronic smoking products, nicotine, and products containing nicotine; raising the minimum age to purchase, exchange, or possess tobacco, a product containing nicotine, or an electronic smoking product; relating to the tobacco use education and cessation fund; relating to retail cigar stores; relating to the taxation of electronic smoking products and vapor products; and providing for an effective date.</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/ak/bills/34/SB24/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 24</code></td>
+            <td class="title-cell">An Act relating to tobacco, tobacco products, electronic smoking products, nicotine, and products containing nicotine; raising the minimum age to purchase, exchange, or possess tobacco, a product containing nicotine, or an electronic smoking product; relating to the tobacco use education and cessation fund; relating to retail cigar stores; relating to the taxation of electronic smoking products and vapor products; and providing for an effective date.</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/ak/bills/34/SB24/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="New York">
             <td><span class="badge">New York</span></td>
-            <td>US State</td>
-            <td><b>A 11560</b></td>
-            <td>Enacts the responsible data center development act</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/ny/bills/2025-2026/A11560/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">A 11560</code></td>
+            <td class="title-cell">Enacts the responsible data center development act</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/ny/bills/2025-2026/A11560/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="New York">
             <td><span class="badge">New York</span></td>
-            <td>US State</td>
-            <td><b>A 11369</b></td>
-            <td>Enacts the "extended producer responsibility for artificial turf act of 2026"</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/ny/bills/2025-2026/A11369/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">A 11369</code></td>
+            <td class="title-cell">Enacts the "extended producer responsibility for artificial turf act of 2026"</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/ny/bills/2025-2026/A11369/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Pennsylvania">
             <td><span class="badge">Pennsylvania</span></td>
-            <td>US State</td>
-            <td><b>SB 146</b></td>
-            <td>An Act amending the act of April 9, 1929 (P.L.343, No.176), known as The Fiscal Code, in emergency COVID-19 response, providing for extension of use of certain funds; in Child Care Staff Recruitment and Retention Program, further providing for Child Care Staff Recruitment and Retention Program; in cigarette sales and licensing, further providing for definitions and providing for allowable mode of operations for licensed cigarette stamping agents; in joint underwriting association, further providing for fund transfers; providing for food processing residuals; in financially distressed municipalities, further providing for financial recovery; in oil and gas wells, further providing for Oil and Gas Lease Fund and providing for deep wells and Utica Shale permits and for well plugging; providing for manufacturing and investment tax credit, for Innovate in PA 2.0 Tax Credit and for design build best value; in human services, further providing for medical assistance payments for institutional care, for resident care and related costs and for LIFE Program and providing for transition to chip-enabled access cards, for Medical Assistance Reentry Program, for Children's Trust Fund and for medical assistance pharmacy services; in additional keystone opportunity expansion zones, providing for additional zone for shipbuilding and for additional zones; providing for residential revitalization keystone opportunity zones and for violent incident clearance and technological investigative methods; in special funds, further providing for funding and for Pennsylvania Convention Center; in additional special funds and restricted accounts, providing for Veterans' Trust Fund Board and further providing for establishment of special fund and account, for use of fund and for distributions from Pennsylvania Race Horse Development Fund; in additional special funds and restricted accounts, further providing for deposits and providing for Professional Licensure Augmentation Account; in general budget implementation, further providing for Executive Offices, for Department of Agriculture, for Department of Corrections, for Department of Labor and Industry and for Department of Transportation, providing for Pennsylvania Emergency Management Agency and further providing for Commonwealth Financing Authority, for Federal and Commonwealth use of forest land, for Multimodal Transportation Fund, for School Safety and Security Fund, for State Gaming Fund, for State Employees' Retirement System Restricted Account and for Public School Employees' Retirement System Restricted Account; in retirement, providing for 2026 special ad hoc municipal police and firefighter postretirement adjustment, for supplemental annuities for public school employees commencing 2026, for supplemental annuities for State employees commencing 2026 and for payment of supplemental annuity and special ad hoc postretirement adjustment; in electricity load forecast accountability, providing for energy and water reporting and for advanced transmission technologies; in 2025-2026 budget implementation, further providing for Department of Agriculture, for Department of Human Services and for Pennsylvania Higher Education Assistance Agency; providing for 2026-2027 budget implementation and for 2026-2027 restrictions on appropriations for funds and accounts; in fiscal supplements to statutory programs, providing for amusement tax clarification, for situs for local sales tax for cities of the first class, for situs for local sales tax for counties of the second class, for net income and for housing; abrogating a regulation; making repeals; providing for suspension of pension actuarial notes; and making editorial changes.</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/pa/bills/2025-2026/SB146/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 146</code></td>
+            <td class="title-cell">An Act amending the act of April 9, 1929 (P.L.343, No.176), known as The Fiscal Code, in emergency COVID-19 response, providing for extension of use of certain funds; in Child Care Staff Recruitment and Retention Program, further providing for Child Care Staff Recruitment and Retention Program; in cigarette sales and licensing, further providing for definitions and providing for allowable mode of operations for licensed cigarette stamping agents; in joint underwriting association, further providing for fund transfers; providing for food processing residuals; in financially distressed municipalities, further providing for financial recovery; in oil and gas wells, further providing for Oil and Gas Lease Fund and providing for deep wells and Utica Shale permits and for well plugging; providing for manufacturing and investment tax credit, for Innovate in PA 2.0 Tax Credit and for design build best value; in human services, further providing for medical assistance payments for institutional care, for resident care and related costs and for LIFE Program and providing for transition to chip-enabled access cards, for Medical Assistance Reentry Program, for Children's Trust Fund and for medical assistance pharmacy services; in additional keystone opportunity expansion zones, providing for additional zone for shipbuilding and for additional zones; providing for residential revitalization keystone opportunity zones and for violent incident clearance and technological investigative methods; in special funds, further providing for funding and for Pennsylvania Convention Center; in additional special funds and restricted accounts, providing for Veterans' Trust Fund Board and further providing for establishment of special fund and account, for use of fund and for distributions from Pennsylvania Race Horse Development Fund; in additional special funds and restricted accounts, further providing for deposits and providing for Professional Licensure Augmentation Account; in general budget implementation, further providing for Executive Offices, for Department of Agriculture, for Department of Corrections, for Department of Labor and Industry and for Department of Transportation, providing for Pennsylvania Emergency Management Agency and further providing for Commonwealth Financing Authority, for Federal and Commonwealth use of forest land, for Multimodal Transportation Fund, for School Safety and Security Fund, for State Gaming Fund, for State Employees' Retirement System Restricted Account and for Public School Employees' Retirement System Restricted Account; in retirement, providing for 2026 special ad hoc municipal police and firefighter postretirement adjustment, for supplemental annuities for public school employees commencing 2026, for supplemental annuities for State employees commencing 2026 and for payment of supplemental annuity and special ad hoc postretirement adjustment; in electricity load forecast accountability, providing for energy and water reporting and for advanced transmission technologies; in 2025-2026 budget implementation, further providing for Department of Agriculture, for Department of Human Services and for Pennsylvania Higher Education Assistance Agency; providing for 2026-2027 budget implementation and for 2026-2027 restrictions on appropriations for funds and accounts; in fiscal supplements to statutory programs, providing for amusement tax clarification, for situs for local sales tax for cities of the first class, for situs for local sales tax for counties of the second class, for net income and for housing; abrogating a regulation; making repeals; providing for suspension of pension actuarial notes; and making editorial changes.</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/pa/bills/2025-2026/SB146/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Pennsylvania">
             <td><span class="badge">Pennsylvania</span></td>
-            <td>US State</td>
-            <td><b>SB 349</b></td>
-            <td>An Act amending Title 27 (Environmental Resources) of the Pennsylvania Consolidated Statutes, in environmental protection, providing for decommissioning of solar energy facilities.</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/pa/bills/2025-2026/SB349/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 349</code></td>
+            <td class="title-cell">An Act amending Title 27 (Environmental Resources) of the Pennsylvania Consolidated Statutes, in environmental protection, providing for decommissioning of solar energy facilities.</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/pa/bills/2025-2026/SB349/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Alaska">
             <td><span class="badge">Alaska</span></td>
-            <td>US State</td>
-            <td><b>HB 239</b></td>
-            <td>An Act relating to crime and criminal procedure; relating to civil claims by victims of sexual abuse of a minor; relating to homicide; relating to assault; relating to sexual assault; relating to stalking; relating to sexual abuse of a minor; relating to enticement and unlawful exploitation of a minor; relating to cruelty to animals; relating to endangering the welfare of a child; relating to indecent exposure; relating to theft; relating to generated obscene child sexual abuse material; relating to sending an explicit image of a minor; relating to solicitation or production of an indecent picture of a minor; relating to distribution of indecent material to minors; relating to prostitution; relating to the Controlled Substances Advisory Committee; relating to the testimony of children in criminal proceedings; relating to sentencing; relating to sexual assault examination kits; restricting the release of certain records of convictions; relating to teaching certificates; relating to the definition of 'victim counseling center' for disclosure of certain communications concerning sexual assault or domestic violence; relating to motor vehicle offenses; relating to the board of parole; relating to parole; relating to medical release for service of sentence by electronic monitoring; relating to licensing of school bus drivers; creating and relating to the address confidentiality program; and providing for an effective date.</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/ak/bills/34/HB239/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 239</code></td>
+            <td class="title-cell">An Act relating to crime and criminal procedure; relating to civil claims by victims of sexual abuse of a minor; relating to homicide; relating to assault; relating to sexual assault; relating to stalking; relating to sexual abuse of a minor; relating to enticement and unlawful exploitation of a minor; relating to cruelty to animals; relating to endangering the welfare of a child; relating to indecent exposure; relating to theft; relating to generated obscene child sexual abuse material; relating to sending an explicit image of a minor; relating to solicitation or production of an indecent picture of a minor; relating to distribution of indecent material to minors; relating to prostitution; relating to the Controlled Substances Advisory Committee; relating to the testimony of children in criminal proceedings; relating to sentencing; relating to sexual assault examination kits; restricting the release of certain records of convictions; relating to teaching certificates; relating to the definition of 'victim counseling center' for disclosure of certain communications concerning sexual assault or domestic violence; relating to motor vehicle offenses; relating to the board of parole; relating to parole; relating to medical release for service of sentence by electronic monitoring; relating to licensing of school bus drivers; creating and relating to the address confidentiality program; and providing for an effective date.</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/ak/bills/34/HB239/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Alaska">
             <td><span class="badge">Alaska</span></td>
-            <td>US State</td>
-            <td><b>HB 314</b></td>
-            <td>An Act relating to registered interior designers and interior design; relating to project costs for the construction, enlargement, or improvement of airports; extending the termination date of the State Board of Registration for Architects, Engineers, and Land Surveyors; relating to the State Board of Registration for Architects, Engineers, and Land Surveyors; establishing requirements for the practice of registered interior design; relating to the practice of architecture, engineering, land surveying, landscape architecture, and registered interior design; relating to the scope of the certification requirements for architects, engineers, land surveyors, landscape architects, and registered interior designers; relating to immunity for design professionals; relating to the cost of construction for recreation centers; relating to liens for labor or materials furnished; relating to the procurement of landscape architectural and interior design services; relating to the cost of construction of safe water and hygienic sewage disposal facilities in villages; and providing for an effective date.</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/ak/bills/34/HB314/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 314</code></td>
+            <td class="title-cell">An Act relating to registered interior designers and interior design; relating to project costs for the construction, enlargement, or improvement of airports; extending the termination date of the State Board of Registration for Architects, Engineers, and Land Surveyors; relating to the State Board of Registration for Architects, Engineers, and Land Surveyors; establishing requirements for the practice of registered interior design; relating to the practice of architecture, engineering, land surveying, landscape architecture, and registered interior design; relating to the scope of the certification requirements for architects, engineers, land surveyors, landscape architects, and registered interior designers; relating to immunity for design professionals; relating to the cost of construction for recreation centers; relating to liens for labor or materials furnished; relating to the procurement of landscape architectural and interior design services; relating to the cost of construction of safe water and hygienic sewage disposal facilities in villages; and providing for an effective date.</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/ak/bills/34/HB314/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Ohio">
             <td><span class="badge">Ohio</span></td>
-            <td>US State</td>
-            <td><b>HB 1001</b></td>
-            <td>No title provided</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/oh/bills/136/HB1001/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 1001</code></td>
+            <td class="title-cell">No title provided</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/oh/bills/136/HB1001/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Ohio">
             <td><span class="badge">Ohio</span></td>
-            <td>US State</td>
-            <td><b>HJR 10</b></td>
-            <td>No title provided</td>
-            <td><code>additive manufacturing</code></td>
-            <td><a href="https://openstates.org/oh/bills/136/HJR10/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HJR 10</code></td>
+            <td class="title-cell">No title provided</td>
+            <td><span class="kw-tag">additive manufacturing</span></td>
+            <td><a href="https://openstates.org/oh/bills/136/HJR10/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Kentucky">
             <td><span class="badge">Kentucky</span></td>
-            <td>US State</td>
-            <td><b>HB 709</b></td>
-            <td>AN ACT relating to respiratory care.</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/ky/bills/2026RS/HB709/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 709</code></td>
+            <td class="title-cell">AN ACT relating to respiratory care.</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/ky/bills/2026RS/HB709/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Illinois">
             <td><span class="badge">Illinois</span></td>
-            <td>US State</td>
-            <td><b>SB 3775</b></td>
-            <td>TNC-SCHOOL TNC SERVICES</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/il/bills/104th/SB3775/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 3775</code></td>
+            <td class="title-cell">TNC-SCHOOL TNC SERVICES</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/il/bills/104th/SB3775/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Montana">
             <td><span class="badge">Montana</span></td>
-            <td>US State</td>
-            <td><b>HB 504</b></td>
-            <td>Expand livestock loss eligibility to include domestic bison</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/mt/bills/2025/HB504/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 504</code></td>
+            <td class="title-cell">Expand livestock loss eligibility to include domestic bison</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/mt/bills/2025/HB504/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Montana">
             <td><span class="badge">Montana</span></td>
-            <td>US State</td>
-            <td><b>HB 4</b></td>
-            <td>Appropriations by budget amendment</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/mt/bills/2025/HB4/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 4</code></td>
+            <td class="title-cell">Appropriations by budget amendment</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/mt/bills/2025/HB4/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Montana">
             <td><span class="badge">Montana</span></td>
-            <td>US State</td>
-            <td><b>HB 264</b></td>
-            <td>Generally revise wildlife location data subject to public information requests</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/mt/bills/2025/HB264/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 264</code></td>
+            <td class="title-cell">Generally revise wildlife location data subject to public information requests</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/mt/bills/2025/HB264/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Montana">
             <td><span class="badge">Montana</span></td>
-            <td>US State</td>
-            <td><b>SB 372</b></td>
-            <td>Establish nurse safe staffing standards</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/mt/bills/2025/SB372/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 372</code></td>
+            <td class="title-cell">Establish nurse safe staffing standards</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/mt/bills/2025/SB372/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Montana">
             <td><span class="badge">Montana</span></td>
-            <td>US State</td>
-            <td><b>HB 356</b></td>
-            <td>Allow livestock loss reimbursement for black bear predation</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/mt/bills/2025/HB356/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 356</code></td>
+            <td class="title-cell">Allow livestock loss reimbursement for black bear predation</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/mt/bills/2025/HB356/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Illinois">
             <td><span class="badge">Illinois</span></td>
-            <td>US State</td>
-            <td><b>SB 2022</b></td>
-            <td>SAFE PATIENT LIMITS ACT</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/il/bills/104th/SB2022/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 2022</code></td>
+            <td class="title-cell">SAFE PATIENT LIMITS ACT</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/il/bills/104th/SB2022/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Hawaii">
             <td><span class="badge">Hawaii</span></td>
-            <td>US State</td>
-            <td><b>HB 451</b></td>
-            <td>RELATING TO ECONOMIC DEVELOPMENT.</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/hi/bills/2026/HB451/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 451</code></td>
+            <td class="title-cell">RELATING TO ECONOMIC DEVELOPMENT.</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/hi/bills/2026/HB451/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Hawaii">
             <td><span class="badge">Hawaii</span></td>
-            <td>US State</td>
-            <td><b>HB 62</b></td>
-            <td>RELATING TO HEALTHCARE FACILITY NURSE STAFFING.</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://openstates.org/hi/bills/2026/HB62/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 62</code></td>
+            <td class="title-cell">RELATING TO HEALTHCARE FACILITY NURSE STAFFING.</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://openstates.org/hi/bills/2026/HB62/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="New York">
             <td><span class="badge">New York</span></td>
-            <td>US State</td>
-            <td><b>S 10669</b></td>
-            <td>Establishes the indigenous black carbon recovery and clean energy manufacturing pilot program in the capital district and adjoining regions; appropriation</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/ny/bills/2025-2026/S10669/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">S 10669</code></td>
+            <td class="title-cell">Establishes the indigenous black carbon recovery and clean energy manufacturing pilot program in the capital district and adjoining regions; appropriation</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/ny/bills/2025-2026/S10669/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Hawaii">
             <td><span class="badge">Hawaii</span></td>
-            <td>US State</td>
-            <td><b>HB 451</b></td>
-            <td>RELATING TO ECONOMIC DEVELOPMENT.</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/hi/bills/2026/HB451/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 451</code></td>
+            <td class="title-cell">RELATING TO ECONOMIC DEVELOPMENT.</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/hi/bills/2026/HB451/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Hawaii">
             <td><span class="badge">Hawaii</span></td>
-            <td>US State</td>
-            <td><b>SB 581</b></td>
-            <td>RELATING TO ECONOMIC DEVELOPMENT.</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/hi/bills/2026/SB581/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 581</code></td>
+            <td class="title-cell">RELATING TO ECONOMIC DEVELOPMENT.</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/hi/bills/2026/SB581/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Hawaii">
             <td><span class="badge">Hawaii</span></td>
-            <td>US State</td>
-            <td><b>SB 3284</b></td>
-            <td>RELATING TO THE HAWAII TECHNOLOGY DEVELOPMENT CORPORATION.</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/hi/bills/2026/SB3284/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 3284</code></td>
+            <td class="title-cell">RELATING TO THE HAWAII TECHNOLOGY DEVELOPMENT CORPORATION.</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/hi/bills/2026/SB3284/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Washington">
             <td><span class="badge">Washington</span></td>
-            <td>US State</td>
-            <td><b>SB 5634</b></td>
-            <td>Improving accessibility of community solar projects in Washington state.</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/wa/bills/2025-2026/SB5634/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 5634</code></td>
+            <td class="title-cell">Improving accessibility of community solar projects in Washington state.</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/wa/bills/2025-2026/SB5634/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Washington">
             <td><span class="badge">Washington</span></td>
-            <td>US State</td>
-            <td><b>SB 5359</b></td>
-            <td>Accelerating the development of clean energy and transmission.</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/wa/bills/2025-2026/SB5359/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 5359</code></td>
+            <td class="title-cell">Accelerating the development of clean energy and transmission.</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/wa/bills/2025-2026/SB5359/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Washington">
             <td><span class="badge">Washington</span></td>
-            <td>US State</td>
-            <td><b>HB 1598</b></td>
-            <td>Concerning fair access to community solar.</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/wa/bills/2025-2026/HB1598/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 1598</code></td>
+            <td class="title-cell">Concerning fair access to community solar.</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/wa/bills/2025-2026/HB1598/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Washington">
             <td><span class="badge">Washington</span></td>
-            <td>US State</td>
-            <td><b>SB 5515</b></td>
-            <td>Concerning fair access to community solar.</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/wa/bills/2025-2026/SB5515/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 5515</code></td>
+            <td class="title-cell">Concerning fair access to community solar.</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/wa/bills/2025-2026/SB5515/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Washington">
             <td><span class="badge">Washington</span></td>
-            <td>US State</td>
-            <td><b>HB 1328</b></td>
-            <td>Accelerating the development of clean energy and transmission.</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/wa/bills/2025-2026/HB1328/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 1328</code></td>
+            <td class="title-cell">Accelerating the development of clean energy and transmission.</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/wa/bills/2025-2026/HB1328/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Washington">
             <td><span class="badge">Washington</span></td>
-            <td>US State</td>
-            <td><b>HB 1804</b></td>
-            <td>Improving accessibility of community solar projects in Washington state.</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://openstates.org/wa/bills/2025-2026/HB1804/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 1804</code></td>
+            <td class="title-cell">Improving accessibility of community solar projects in Washington state.</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://openstates.org/wa/bills/2025-2026/HB1804/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Pennsylvania">
             <td><span class="badge">Pennsylvania</span></td>
-            <td>US State</td>
-            <td><b>SB 246</b></td>
-            <td>An Act amending the act of March 10, 1949 (P.L.30, No.14), known as the Public School Code of 1949, in student supports, providing for
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 246</code></td>
+            <td class="title-cell">An Act amending the act of March 10, 1949 (P.L.30, No.14), known as the Public School Code of 1949, in student supports, providing for
  parental and employee notification of weapon incidents.</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/pa/bills/2025-2026/SB246/" target="_blank">View Docket</a></td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/pa/bills/2025-2026/SB246/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Alaska">
             <td><span class="badge">Alaska</span></td>
-            <td>US State</td>
-            <td><b>HB 314</b></td>
-            <td>An Act relating to registered interior designers and interior design; relating to project costs for the construction, enlargement, or improvement of airports; extending the termination date of the State Board of Registration for Architects, Engineers, and Land Surveyors; relating to the State Board of Registration for Architects, Engineers, and Land Surveyors; establishing requirements for the practice of registered interior design; relating to the practice of architecture, engineering, land surveying, landscape architecture, and registered interior design; relating to the scope of the certification requirements for architects, engineers, land surveyors, landscape architects, and registered interior designers; relating to immunity for design professionals; relating to the cost of construction for recreation centers; relating to liens for labor or materials furnished; relating to the procurement of landscape architectural and interior design services; relating to the cost of construction of safe water and hygienic sewage disposal facilities in villages; and providing for an effective date.</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/ak/bills/34/HB314/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 314</code></td>
+            <td class="title-cell">An Act relating to registered interior designers and interior design; relating to project costs for the construction, enlargement, or improvement of airports; extending the termination date of the State Board of Registration for Architects, Engineers, and Land Surveyors; relating to the State Board of Registration for Architects, Engineers, and Land Surveyors; establishing requirements for the practice of registered interior design; relating to the practice of architecture, engineering, land surveying, landscape architecture, and registered interior design; relating to the scope of the certification requirements for architects, engineers, land surveyors, landscape architects, and registered interior designers; relating to immunity for design professionals; relating to the cost of construction for recreation centers; relating to liens for labor or materials furnished; relating to the procurement of landscape architectural and interior design services; relating to the cost of construction of safe water and hygienic sewage disposal facilities in villages; and providing for an effective date.</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/ak/bills/34/HB314/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Pennsylvania">
             <td><span class="badge">Pennsylvania</span></td>
-            <td>US State</td>
-            <td><b>HB 1788</b></td>
-            <td>An Act amending Titles 74 (Transportation) and 75 (Vehicles) of the Pennsylvania Consolidated Statutes, in sustainable mobility options, further providing for operating program; in metropolitan transportation authorities, providing for supplemental performance reporting; providing for Public Transportation Trust Fund transfer and annual increase; establishing the Road and Bridge Project Fund and the Road and Bridge Project Sinking Fund; in public-private transportation partnerships, providing for applicable authority projects; in lighting equipment, further providing for use and display of illuminating signs; in taxes for highway maintenance and construction, further providing for supplemental funding for three and four digit highway construction; and establishing the Three and Four Digit State Route Account.</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/pa/bills/2025-2026/HB1788/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 1788</code></td>
+            <td class="title-cell">An Act amending Titles 74 (Transportation) and 75 (Vehicles) of the Pennsylvania Consolidated Statutes, in sustainable mobility options, further providing for operating program; in metropolitan transportation authorities, providing for supplemental performance reporting; providing for Public Transportation Trust Fund transfer and annual increase; establishing the Road and Bridge Project Fund and the Road and Bridge Project Sinking Fund; in public-private transportation partnerships, providing for applicable authority projects; in lighting equipment, further providing for use and display of illuminating signs; in taxes for highway maintenance and construction, further providing for supplemental funding for three and four digit highway construction; and establishing the Three and Four Digit State Route Account.</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/pa/bills/2025-2026/HB1788/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Alaska">
             <td><span class="badge">Alaska</span></td>
-            <td>US State</td>
-            <td><b>HB 263</b></td>
-            <td>An Act making appropriations for the operating and loan program expenses of state government and for certain programs; capitalizing funds; amending appropriations; making supplemental appropriations; and providing for an effective date.</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/ak/bills/34/HB263/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 263</code></td>
+            <td class="title-cell">An Act making appropriations for the operating and loan program expenses of state government and for certain programs; capitalizing funds; amending appropriations; making supplemental appropriations; and providing for an effective date.</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/ak/bills/34/HB263/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Pennsylvania">
             <td><span class="badge">Pennsylvania</span></td>
-            <td>US State</td>
-            <td><b>HB 1330</b></td>
-            <td>An Act to provide appropriations from the General Fund for the expenses of certain agencies of the Executive Department for the fiscal year July 1, 2025, to June 30, 2026, and for the payment of bills incurred and remaining unpaid at the close of the fiscal year ending June 30, 2025.</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/pa/bills/2025-2026/HB1330/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 1330</code></td>
+            <td class="title-cell">An Act to provide appropriations from the General Fund for the expenses of certain agencies of the Executive Department for the fiscal year July 1, 2025, to June 30, 2026, and for the payment of bills incurred and remaining unpaid at the close of the fiscal year ending June 30, 2025.</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/pa/bills/2025-2026/HB1330/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Illinois">
             <td><span class="badge">Illinois</span></td>
-            <td>US State</td>
-            <td><b>HB 5786</b></td>
-            <td>CO2 PIPELINES-EMINENT DOMAIN</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/il/bills/104th/HB5786/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 5786</code></td>
+            <td class="title-cell">CO2 PIPELINES-EMINENT DOMAIN</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/il/bills/104th/HB5786/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="New York">
             <td><span class="badge">New York</span></td>
-            <td>US State</td>
-            <td><b>S 10685</b></td>
-            <td>Enacts the "Fostering Optimal Classroom Use of Screens (FOCUS) act" to limit use of internet enabled devices and prioritize non-digital teaching methods</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/ny/bills/2025-2026/S10685/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">S 10685</code></td>
+            <td class="title-cell">Enacts the "Fostering Optimal Classroom Use of Screens (FOCUS) act" to limit use of internet enabled devices and prioritize non-digital teaching methods</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/ny/bills/2025-2026/S10685/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Missouri">
             <td><span class="badge">Missouri</span></td>
-            <td>US State</td>
-            <td><b>HB 2866</b></td>
-            <td>Creates, repeals, and modifies provisions governing elementary and secondary education</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/mo/bills/2026/HB2866/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 2866</code></td>
+            <td class="title-cell">Creates, repeals, and modifies provisions governing elementary and secondary education</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/mo/bills/2026/HB2866/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Missouri">
             <td><span class="badge">Missouri</span></td>
-            <td>US State</td>
-            <td><b>HB 2871</b></td>
-            <td>Changes the laws regarding consumer products so that certain individuals and businesses have access to product repair information from certain manufacturers</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/mo/bills/2026/HB2871/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 2871</code></td>
+            <td class="title-cell">Changes the laws regarding consumer products so that certain individuals and businesses have access to product repair information from certain manufacturers</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/mo/bills/2026/HB2871/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Louisiana">
             <td><span class="badge">Louisiana</span></td>
-            <td>US State</td>
-            <td><b>HB 1175</b></td>
-            <td>AIRCRAFT/AIRPORTS: Provides with respect to definitions pertaining to aeronautics</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://openstates.org/la/bills/2026/HB1175/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 1175</code></td>
+            <td class="title-cell">AIRCRAFT/AIRPORTS: Provides with respect to definitions pertaining to aeronautics</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://openstates.org/la/bills/2026/HB1175/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Alaska">
             <td><span class="badge">Alaska</span></td>
-            <td>US State</td>
-            <td><b>HB 173</b></td>
-            <td>An Act relating to occupational therapist licensure; relating to occupational therapy assistant licensure; relating to an occupational therapist licensure compact; relating to an executive administrator for the State Physical Therapy and Occupational Therapy Board; relating to physical therapist licensure; relating to physical therapist assistant licensure; relating to audiologist licensure; relating to speech-language pathologist licensure; and relating to national criminal history record checks.</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/ak/bills/34/HB173/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 173</code></td>
+            <td class="title-cell">An Act relating to occupational therapist licensure; relating to occupational therapy assistant licensure; relating to an occupational therapist licensure compact; relating to an executive administrator for the State Physical Therapy and Occupational Therapy Board; relating to physical therapist licensure; relating to physical therapist assistant licensure; relating to audiologist licensure; relating to speech-language pathologist licensure; and relating to national criminal history record checks.</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/ak/bills/34/HB173/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Alaska">
             <td><span class="badge">Alaska</span></td>
-            <td>US State</td>
-            <td><b>HB 239</b></td>
-            <td>An Act relating to crime and criminal procedure; relating to civil claims by victims of sexual abuse of a minor; relating to homicide; relating to assault; relating to sexual assault; relating to stalking; relating to sexual abuse of a minor; relating to enticement and unlawful exploitation of a minor; relating to cruelty to animals; relating to endangering the welfare of a child; relating to indecent exposure; relating to theft; relating to generated obscene child sexual abuse material; relating to sending an explicit image of a minor; relating to solicitation or production of an indecent picture of a minor; relating to distribution of indecent material to minors; relating to prostitution; relating to the Controlled Substances Advisory Committee; relating to the testimony of children in criminal proceedings; relating to sentencing; relating to sexual assault examination kits; restricting the release of certain records of convictions; relating to teaching certificates; relating to the definition of 'victim counseling center' for disclosure of certain communications concerning sexual assault or domestic violence; relating to motor vehicle offenses; relating to the board of parole; relating to parole; relating to medical release for service of sentence by electronic monitoring; relating to licensing of school bus drivers; creating and relating to the address confidentiality program; and providing for an effective date.</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/ak/bills/34/HB239/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 239</code></td>
+            <td class="title-cell">An Act relating to crime and criminal procedure; relating to civil claims by victims of sexual abuse of a minor; relating to homicide; relating to assault; relating to sexual assault; relating to stalking; relating to sexual abuse of a minor; relating to enticement and unlawful exploitation of a minor; relating to cruelty to animals; relating to endangering the welfare of a child; relating to indecent exposure; relating to theft; relating to generated obscene child sexual abuse material; relating to sending an explicit image of a minor; relating to solicitation or production of an indecent picture of a minor; relating to distribution of indecent material to minors; relating to prostitution; relating to the Controlled Substances Advisory Committee; relating to the testimony of children in criminal proceedings; relating to sentencing; relating to sexual assault examination kits; restricting the release of certain records of convictions; relating to teaching certificates; relating to the definition of 'victim counseling center' for disclosure of certain communications concerning sexual assault or domestic violence; relating to motor vehicle offenses; relating to the board of parole; relating to parole; relating to medical release for service of sentence by electronic monitoring; relating to licensing of school bus drivers; creating and relating to the address confidentiality program; and providing for an effective date.</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/ak/bills/34/HB239/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Alaska">
             <td><span class="badge">Alaska</span></td>
-            <td>US State</td>
-            <td><b>HB 263</b></td>
-            <td>An Act making appropriations for the operating and loan program expenses of state government and for certain programs; capitalizing funds; amending appropriations; making supplemental appropriations; and providing for an effective date.</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/ak/bills/34/HB263/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 263</code></td>
+            <td class="title-cell">An Act making appropriations for the operating and loan program expenses of state government and for certain programs; capitalizing funds; amending appropriations; making supplemental appropriations; and providing for an effective date.</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/ak/bills/34/HB263/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Pennsylvania">
             <td><span class="badge">Pennsylvania</span></td>
-            <td>US State</td>
-            <td><b>HB 1330</b></td>
-            <td>An Act to provide appropriations from the General Fund for the expenses of certain agencies of the Executive Department for the fiscal year July 1, 2025, to June 30, 2026, and for the payment of bills incurred and remaining unpaid at the close of the fiscal year ending June 30, 2025.</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/pa/bills/2025-2026/HB1330/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 1330</code></td>
+            <td class="title-cell">An Act to provide appropriations from the General Fund for the expenses of certain agencies of the Executive Department for the fiscal year July 1, 2025, to June 30, 2026, and for the payment of bills incurred and remaining unpaid at the close of the fiscal year ending June 30, 2025.</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/pa/bills/2025-2026/HB1330/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Illinois">
             <td><span class="badge">Illinois</span></td>
-            <td>US State</td>
-            <td><b>HB 5151</b></td>
-            <td>AUTO LICENSE PLATE RECOGNITION</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/il/bills/104th/HB5151/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 5151</code></td>
+            <td class="title-cell">AUTO LICENSE PLATE RECOGNITION</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/il/bills/104th/HB5151/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Louisiana">
             <td><span class="badge">Louisiana</span></td>
-            <td>US State</td>
-            <td><b>HR 168</b></td>
-            <td>ATHLETICS: Requests the Board of Regents to conduct a comprehensive study and analysis of collegiate athletic program funding</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/la/bills/2026/HR168/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HR 168</code></td>
+            <td class="title-cell">ATHLETICS: Requests the Board of Regents to conduct a comprehensive study and analysis of collegiate athletic program funding</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/la/bills/2026/HR168/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Ohio">
             <td><span class="badge">Ohio</span></td>
-            <td>US State</td>
-            <td><b>HB 88</b></td>
-            <td>Regards drug trafficking, human trafficking, and fentanyl</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/oh/bills/136/HB88/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 88</code></td>
+            <td class="title-cell">Regards drug trafficking, human trafficking, and fentanyl</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/oh/bills/136/HB88/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Ohio">
             <td><span class="badge">Ohio</span></td>
-            <td>US State</td>
-            <td><b>HB 96</b></td>
-            <td>Make state operating appropriations for FY 2026-27</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/oh/bills/136/HB96/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 96</code></td>
+            <td class="title-cell">Make state operating appropriations for FY 2026-27</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/oh/bills/136/HB96/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Ohio">
             <td><span class="badge">Ohio</span></td>
-            <td>US State</td>
-            <td><b>HB 54</b></td>
-            <td>Make appropriations for transportation for FY 2026-27 biennium</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/oh/bills/136/HB54/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">HB 54</code></td>
+            <td class="title-cell">Make appropriations for transportation for FY 2026-27 biennium</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/oh/bills/136/HB54/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Ohio">
             <td><span class="badge">Ohio</span></td>
-            <td>US State</td>
-            <td><b>SB 174</b></td>
-            <td>Regards allocation of parenting responsibilities</td>
-            <td><code>driver monitoring</code></td>
-            <td><a href="https://openstates.org/oh/bills/136/SB174/" target="_blank">View Docket</a></td>
+            <td class="source-cell">US State</td>
+            <td><code class="bill-id">SB 174</code></td>
+            <td class="title-cell">Regards allocation of parenting responsibilities</td>
+            <td><span class="kw-tag">driver monitoring</span></td>
+            <td><a href="https://openstates.org/oh/bills/136/SB174/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Switzerland (CH)">
             <td><span class="badge">Switzerland (CH)</span></td>
-            <td>Swiss Federal Assembly (Curia Vista)</td>
-            <td><b>CH-Federal-CYBERSECURITY</b></td>
-            <td>Swiss Parliamentary Initiative on Cybersecurity</td>
-            <td><code>cybersecurity</code></td>
-            <td><a href="https://www.parlament.ch/en/ratsbetrieb/suche-curia-vista?k=cybersecurity" target="_blank">View Docket</a></td>
+            <td class="source-cell">Swiss Federal Assembly (Curia Vista)</td>
+            <td><code class="bill-id">CH-Federal-CYBERSECURITY</code></td>
+            <td class="title-cell">Swiss Parliamentary Initiative on Cybersecurity</td>
+            <td><span class="kw-tag">cybersecurity</span></td>
+            <td><a href="https://www.parlament.ch/en/ratsbetrieb/suche-curia-vista?k=cybersecurity" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Switzerland (CH)">
             <td><span class="badge">Switzerland (CH)</span></td>
-            <td>Swiss Federal Assembly (Curia Vista)</td>
-            <td><b>CH-Federal-ENCRYPTION</b></td>
-            <td>Swiss Parliamentary Initiative on Encryption</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.parlament.ch/en/ratsbetrieb/suche-curia-vista?k=encryption" target="_blank">View Docket</a></td>
+            <td class="source-cell">Swiss Federal Assembly (Curia Vista)</td>
+            <td><code class="bill-id">CH-Federal-ENCRYPTION</code></td>
+            <td class="title-cell">Swiss Parliamentary Initiative on Encryption</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.parlament.ch/en/ratsbetrieb/suche-curia-vista?k=encryption" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Taiwan (TW)">
             <td><span class="badge">Taiwan (TW)</span></td>
-            <td>Legislative Yuan (Taiwan)</td>
-            <td><b>LY-Tech-Policy-2026</b></td>
-            <td>National Critical Infrastructure & Semiconductor Protection Act</td>
-            <td><code>semiconductor</code></td>
-            <td><a href="https://www.ly.gov.tw" target="_blank">View Docket</a></td>
+            <td class="source-cell">Legislative Yuan (Taiwan)</td>
+            <td><code class="bill-id">LY-Tech-Policy-2026</code></td>
+            <td class="title-cell">National Critical Infrastructure & Semiconductor Protection Act</td>
+            <td><span class="kw-tag">semiconductor</span></td>
+            <td><a href="https://www.ly.gov.tw" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="South Korea (KR)">
             <td><span class="badge">South Korea (KR)</span></td>
-            <td>National Assembly (South Korea)</td>
-            <td><b>KR-Assembly-AI-Cyber</b></td>
-            <td>Basic Act on Artificial Intelligence and Telecommunications Security</td>
-            <td><code>artificial intelligence</code></td>
-            <td><a href="https://www.assembly.go.kr" target="_blank">View Docket</a></td>
+            <td class="source-cell">National Assembly (South Korea)</td>
+            <td><code class="bill-id">KR-Assembly-AI-Cyber</code></td>
+            <td class="title-cell">Basic Act on Artificial Intelligence and Telecommunications Security</td>
+            <td><span class="kw-tag">artificial intelligence</span></td>
+            <td><a href="https://www.assembly.go.kr" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Israel (IL)">
             <td><span class="badge">Israel (IL)</span></td>
-            <td>Knesset (Israel)</td>
-            <td><b>Knesset-Cyber-DualUse</b></td>
-            <td>Export Control and Encryption Technology Regulation Amendment</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://main.knesset.gov.il" target="_blank">View Docket</a></td>
+            <td class="source-cell">Knesset (Israel)</td>
+            <td><code class="bill-id">Knesset-Cyber-DualUse</code></td>
+            <td class="title-cell">Export Control and Encryption Technology Regulation Amendment</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://main.knesset.gov.il" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>Agriculture and Rural Development</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/category/agriculture-and-rural-development" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">Agriculture and Rural Development</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/category/agriculture-and-rural-development" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>Finance, Industry and Labour</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/category/finance-industry-and-labour" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">Finance, Industry and Labour</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/category/finance-industry-and-labour" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>Governance and Strategic Affairs</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/category/governance-and-strategic-affairs" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">Governance and Strategic Affairs</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/category/governance-and-strategic-affairs" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>Health, Education and Social Welfare</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/category/health-education-and-social-welfare" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">Health, Education and Social Welfare</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/category/health-education-and-social-welfare" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>Constitutional Amendments</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/category/constitutional-amendments" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">Constitutional Amendments</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/category/constitutional-amendments" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>Rules and Regulations</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/category/rules-and-regulations" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">Rules and Regulations</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/category/rules-and-regulations" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>Infrastructure and Environment</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/category/infrastructure-and-environment" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">Infrastructure and Environment</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/category/infrastructure-and-environment" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>Foreign Contribution (Regulation) Amendment Rules, 2026</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/foreign-contribution-regulation-amendment-rules-2026" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">Foreign Contribution (Regulation) Amendment Rules, 2026</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/foreign-contribution-regulation-amendment-rules-2026" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>The National Co-operative Development Corporation (Amendment) Bill, 2026</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/the-national-co-operative-development-corporation-amendment-bill-2026" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">The National Co-operative Development Corporation (Amendment) Bill, 2026</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/the-national-co-operative-development-corporation-amendment-bill-2026" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="India (IN)">
             <td><span class="badge">India (IN)</span></td>
-            <td>PRS Legislative Research (India)</td>
-            <td><b>Bill / Draft</b></td>
-            <td>The Mines and Minerals (Development and Regulation) Amendment Bill, 2026</td>
-            <td><code>legislative-docket</code></td>
-            <td><a href="https://prsindia.org/billtrack/the-mines-and-minerals-development-and-regulation-amendment-bill-2026" target="_blank">View Docket</a></td>
+            <td class="source-cell">PRS Legislative Research (India)</td>
+            <td><code class="bill-id">Bill / Draft</code></td>
+            <td class="title-cell">The Mines and Minerals (Development and Regulation) Amendment Bill, 2026</td>
+            <td><span class="kw-tag">legislative-docket</span></td>
+            <td><a href="https://prsindia.org/billtrack/the-mines-and-minerals-development-and-regulation-amendment-bill-2026" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Singapore (SG)">
             <td><span class="badge">Singapore (SG)</span></td>
-            <td>Singapore Statutes Online (AGC)</td>
-            <td><b>PDPA / Cybersecurity Act</b></td>
-            <td>Personal Data Protection & Critical Information Infrastructure Framework</td>
-            <td><code>data protection</code></td>
-            <td><a href="https://sso.agc.gov.sg" target="_blank">View Docket</a></td>
+            <td class="source-cell">Singapore Statutes Online (AGC)</td>
+            <td><code class="bill-id">PDPA / Cybersecurity Act</code></td>
+            <td class="title-cell">Personal Data Protection & Critical Information Infrastructure Framework</td>
+            <td><span class="kw-tag">data protection</span></td>
+            <td><a href="https://sso.agc.gov.sg" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Japan (JP)">
             <td><span class="badge">Japan (JP)</span></td>
-            <td>Japan House of Representatives Docket</td>
-            <td><b>METI-Cyber-2025</b></td>
-            <td>Telecommunications Business & Encryption Standards Regulation</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.shugiin.go.jp" target="_blank">View Docket</a></td>
+            <td class="source-cell">Japan House of Representatives Docket</td>
+            <td><code class="bill-id">METI-Cyber-2025</code></td>
+            <td class="title-cell">Telecommunications Business & Encryption Standards Regulation</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.shugiin.go.jp" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-17471</b></td>
-            <td>Procurement List; Additions and Deletions</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/08/27/2026-17471/procurement-list-additions-and-deletions" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-17471</code></td>
+            <td class="title-cell">Procurement List; Additions and Deletions</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/08/27/2026-17471/procurement-list-additions-and-deletions" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-17437</b></td>
-            <td>International Trademark Classification Changes</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/08/26/2026-17437/international-trademark-classification-changes" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-17437</code></td>
+            <td class="title-cell">International Trademark Classification Changes</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/08/26/2026-17437/international-trademark-classification-changes" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-17238</b></td>
-            <td>Ballot Mail for Federal Elections</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/08/26/2026-17238/ballot-mail-for-federal-elections" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-17238</code></td>
+            <td class="title-cell">Ballot Mail for Federal Elections</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/08/26/2026-17238/ballot-mail-for-federal-elections" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-18370</b></td>
-            <td>Securing the United States Bulk-Power System</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/09/2026-18370/securing-the-united-states-bulk-power-system" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-18370</code></td>
+            <td class="title-cell">Securing the United States Bulk-Power System</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/09/09/2026-18370/securing-the-united-states-bulk-power-system" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-18316</b></td>
-            <td>Privacy Act of 1974; System of Records</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/09/2026-18316/privacy-act-of-1974-system-of-records" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-18316</code></td>
+            <td class="title-cell">Privacy Act of 1974; System of Records</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/09/09/2026-18316/privacy-act-of-1974-system-of-records" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-18190</b></td>
-            <td>Transfer Agent Rules</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/04/2026-18190/transfer-agent-rules" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-18190</code></td>
+            <td class="title-cell">Transfer Agent Rules</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/09/04/2026-18190/transfer-agent-rules" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-18370</b></td>
-            <td>Securing the United States Bulk-Power System</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/09/2026-18370/securing-the-united-states-bulk-power-system" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-18370</code></td>
+            <td class="title-cell">Securing the United States Bulk-Power System</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/09/09/2026-18370/securing-the-united-states-bulk-power-system" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-17980</b></td>
-            <td>Arms Sales Notification</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/02/2026-17980/arms-sales-notification" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-17980</code></td>
+            <td class="title-cell">Arms Sales Notification</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/09/02/2026-17980/arms-sales-notification" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-17567</b></td>
-            <td>Arms Sales Notification</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/08/28/2026-17567/arms-sales-notification" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-17567</code></td>
+            <td class="title-cell">Arms Sales Notification</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/08/28/2026-17567/arms-sales-notification" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-18382</b></td>
-            <td>Hazardous Materials: Notice of Administrative Determination of Preemption for Common Law Tort Claims Concerning the Transportation of Gasoline</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/09/2026-18382/hazardous-materials-notice-of-administrative-determination-of-preemption-for-common-law-tort-claims" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-18382</code></td>
+            <td class="title-cell">Hazardous Materials: Notice of Administrative Determination of Preemption for Common Law Tort Claims Concerning the Transportation of Gasoline</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/09/09/2026-18382/hazardous-materials-notice-of-administrative-determination-of-preemption-for-common-law-tort-claims" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-18219</b></td>
-            <td>Car Loan Interest Deduction</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/08/2026-18219/car-loan-interest-deduction" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-18219</code></td>
+            <td class="title-cell">Car Loan Interest Deduction</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/09/08/2026-18219/car-loan-interest-deduction" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United States (US)">
             <td><span class="badge">United States (US)</span></td>
-            <td>US Federal Register (GPO)</td>
-            <td><b>FR 2026-18055</b></td>
-            <td>Airworthiness Directives; Airbus SAS Airplanes</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://www.federalregister.gov/documents/2026/09/03/2026-18055/airworthiness-directives-airbus-sas-airplanes" target="_blank">View Docket</a></td>
+            <td class="source-cell">US Federal Register (GPO)</td>
+            <td><code class="bill-id">FR 2026-18055</code></td>
+            <td class="title-cell">Airworthiness Directives; Airbus SAS Airplanes</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://www.federalregister.gov/documents/2026/09/03/2026-18055/airworthiness-directives-airbus-sas-airplanes" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/news_story</b></td>
-            <td>3D printers band together to help the front line</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://www.gov.uk/government/news/3d-printers-band-together-to-help-the-front-line" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/news_story</code></td>
+            <td class="title-cell">3D printers band together to help the front line</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://www.gov.uk/government/news/3d-printers-band-together-to-help-the-front-line" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/research</b></td>
-            <td>3D printers in schools: uses in the curriculum</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://www.gov.uk/government/publications/3d-printers-in-schools-uses-in-the-curriculum" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/research</code></td>
+            <td class="title-cell">3D printers in schools: uses in the curriculum</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://www.gov.uk/government/publications/3d-printers-in-schools-uses-in-the-curriculum" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/press_release</b></td>
-            <td>New 3D printers to boost STEM and design teaching</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://www.gov.uk/government/news/new-3d-printers-to-boost-stem-and-design-teaching" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/press_release</code></td>
+            <td class="title-cell">New 3D printers to boost STEM and design teaching</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://www.gov.uk/government/news/new-3d-printers-to-boost-stem-and-design-teaching" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/detailed_guide</b></td>
-            <td>HM Land Registry email encryption</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.gov.uk/guidance/hm-land-registry-email-encryption" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/detailed_guide</code></td>
+            <td class="title-cell">HM Land Registry email encryption</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.gov.uk/guidance/hm-land-registry-email-encryption" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/guidance</b></td>
-            <td>End-to-end encryption and child safety</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.gov.uk/government/publications/end-to-end-encryption-and-child-safety" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/guidance</code></td>
+            <td class="title-cell">End-to-end encryption and child safety</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.gov.uk/government/publications/end-to-end-encryption-and-child-safety" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/detailed_guide</b></td>
-            <td>Set up government email services securely</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.gov.uk/guidance/set-up-government-email-services-securely" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/detailed_guide</code></td>
+            <td class="title-cell">Set up government email services securely</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.gov.uk/guidance/set-up-government-email-services-securely" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/employment_tribunal_decision</b></td>
-            <td>Mr M Morgan Lloyd v JFG Telemetry Ltd T/a KDG Telemetry and others: 1400518/2019</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://www.gov.uk/employment-tribunal-decisions/mr-m-morgan-lloyd-v-jfg-telemetry-ltd-t-a-kdg-telemetry-and-others-1400518-2019" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/employment_tribunal_decision</code></td>
+            <td class="title-cell">Mr M Morgan Lloyd v JFG Telemetry Ltd T/a KDG Telemetry and others: 1400518/2019</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://www.gov.uk/employment-tribunal-decisions/mr-m-morgan-lloyd-v-jfg-telemetry-ltd-t-a-kdg-telemetry-and-others-1400518-2019" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/detailed_guide</b></td>
-            <td>Monitoring ambient air: quality control and quality assurance</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://www.gov.uk/guidance/monitoring-ambient-air-quality-control-and-quality-assurance" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/detailed_guide</code></td>
+            <td class="title-cell">Monitoring ambient air: quality control and quality assurance</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://www.gov.uk/guidance/monitoring-ambient-air-quality-control-and-quality-assurance" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/detailed_guide</b></td>
-            <td>Device specific vigilance guidance: Cardiac Implantable Electronic Devices (CIEDs)</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://www.gov.uk/guidance/device-specific-vigilance-guidance-cardiac-implantable-electronic-devices-cieds" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/detailed_guide</code></td>
+            <td class="title-cell">Device specific vigilance guidance: Cardiac Implantable Electronic Devices (CIEDs)</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://www.gov.uk/guidance/device-specific-vigilance-guidance-cardiac-implantable-electronic-devices-cieds" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/guide</b></td>
-            <td>Council housing</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://www.gov.uk/council-housing" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/guide</code></td>
+            <td class="title-cell">Council housing</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://www.gov.uk/council-housing" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/guide</b></td>
-            <td>Private renting</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://www.gov.uk/private-renting" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/guide</code></td>
+            <td class="title-cell">Private renting</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://www.gov.uk/private-renting" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="United Kingdom (UK)">
             <td><span class="badge">United Kingdom (UK)</span></td>
-            <td>UK Parliament & GOV.UK</td>
-            <td><b>UK-Policy/local_transaction</b></td>
-            <td>Request a repair to a council property</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://www.gov.uk/repair-council-property" target="_blank">View Docket</a></td>
+            <td class="source-cell">UK Parliament & GOV.UK</td>
+            <td><code class="bill-id">UK-Policy/local_transaction</code></td>
+            <td class="title-cell">Request a repair to a council property</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://www.gov.uk/repair-council-property" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="European Union (EU)">
             <td><span class="badge">European Union (EU)</span></td>
-            <td>EUR-Lex (European Union)</td>
-            <td><b>EU-Directive/Reg-ARTIFICIAL INTELLIGENCE</b></td>
-            <td>EU Directives & Regulatory Track: Artificial Intelligence</td>
-            <td><code>artificial intelligence</code></td>
-            <td><a href="https://eur-lex.europa.eu/search.html?scope=EURLEX&text=artificial+intelligence" target="_blank">View Docket</a></td>
+            <td class="source-cell">EUR-Lex (European Union)</td>
+            <td><code class="bill-id">EU-Directive/Reg-ARTIFICIAL INTELLIGENCE</code></td>
+            <td class="title-cell">EU Directives & Regulatory Track: Artificial Intelligence</td>
+            <td><span class="kw-tag">artificial intelligence</span></td>
+            <td><a href="https://eur-lex.europa.eu/search.html?scope=EURLEX&text=artificial+intelligence" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="European Union (EU)">
             <td><span class="badge">European Union (EU)</span></td>
-            <td>EUR-Lex (European Union)</td>
-            <td><b>EU-Directive/Reg-CYBERSECURITY</b></td>
-            <td>EU Directives & Regulatory Track: Cybersecurity</td>
-            <td><code>cybersecurity</code></td>
-            <td><a href="https://eur-lex.europa.eu/search.html?scope=EURLEX&text=cybersecurity" target="_blank">View Docket</a></td>
+            <td class="source-cell">EUR-Lex (European Union)</td>
+            <td><code class="bill-id">EU-Directive/Reg-CYBERSECURITY</code></td>
+            <td class="title-cell">EU Directives & Regulatory Track: Cybersecurity</td>
+            <td><span class="kw-tag">cybersecurity</span></td>
+            <td><a href="https://eur-lex.europa.eu/search.html?scope=EURLEX&text=cybersecurity" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="European Union (EU)">
             <td><span class="badge">European Union (EU)</span></td>
-            <td>EUR-Lex (European Union)</td>
-            <td><b>EU-Directive/Reg-ENCRYPTION</b></td>
-            <td>EU Directives & Regulatory Track: Encryption</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://eur-lex.europa.eu/search.html?scope=EURLEX&text=encryption" target="_blank">View Docket</a></td>
+            <td class="source-cell">EUR-Lex (European Union)</td>
+            <td><code class="bill-id">EU-Directive/Reg-ENCRYPTION</code></td>
+            <td class="title-cell">EU Directives & Regulatory Track: Encryption</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://eur-lex.europa.eu/search.html?scope=EURLEX&text=encryption" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Mexico (MX)">
             <td><span class="badge">Mexico (MX)</span></td>
-            <td>Gaceta Parlamentaria (Mexico)</td>
-            <td><b>LXVI-Gaceta-Tech</b></td>
-            <td>Iniciativa sobre Ciberseguridad y Protección de Datos Personales</td>
-            <td><code>cybersecurity</code></td>
-            <td><a href="https://gaceta.diputados.gob.mx/" target="_blank">View Docket</a></td>
+            <td class="source-cell">Gaceta Parlamentaria (Mexico)</td>
+            <td><code class="bill-id">LXVI-Gaceta-Tech</code></td>
+            <td class="title-cell">Iniciativa sobre Ciberseguridad y Protección de Datos Personales</td>
+            <td><span class="kw-tag">cybersecurity</span></td>
+            <td><a href="https://gaceta.diputados.gob.mx/" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Brazil (BR)">
             <td><span class="badge">Brazil (BR)</span></td>
-            <td>Câmara dos Deputados</td>
-            <td><b>PL 2201/2026</b></td>
-            <td>Institui o Token de Maioridade Digital no âmbito da plataforma gov.br e estabelece obrigações para sítios eletrônicos que disponibilizem conteúdo adulto na internet.</td>
-            <td><code>criptografia</code></td>
-            <td><a href="https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2622057" target="_blank">View Docket</a></td>
+            <td class="source-cell">Câmara dos Deputados</td>
+            <td><code class="bill-id">PL 2201/2026</code></td>
+            <td class="title-cell">Institui o Token de Maioridade Digital no âmbito da plataforma gov.br e estabelece obrigações para sítios eletrônicos que disponibilizem conteúdo adulto na internet.</td>
+            <td><span class="kw-tag">criptografia</span></td>
+            <td><a href="https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2622057" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</b></td>
-            <td>Constitution of Transport for Cape Town By-law, 2013</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</code></td>
+            <td class="title-cell">Constitution of Transport for Cape Town By-law, 2013</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2010/graffiti</b></td>
-            <td>Graffiti By-law, 2010</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2010/graffiti</code></td>
+            <td class="title-cell">Graffiti By-law, 2010</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/stormwater-management</b></td>
-            <td>Stormwater Management By-law, 2005</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/stormwater-management</code></td>
+            <td class="title-cell">Stormwater Management By-law, 2005</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/filming</b></td>
-            <td>Filming By-law, 2005</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/filming</code></td>
+            <td class="title-cell">Filming By-law, 2005</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2003/water-services</b></td>
-            <td>Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2003/water-services</code></td>
+            <td class="title-cell">Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</b></td>
-            <td>Constitution of Transport for Cape Town By-law, 2013</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</code></td>
+            <td class="title-cell">Constitution of Transport for Cape Town By-law, 2013</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2010/graffiti</b></td>
-            <td>Graffiti By-law, 2010</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2010/graffiti</code></td>
+            <td class="title-cell">Graffiti By-law, 2010</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/stormwater-management</b></td>
-            <td>Stormwater Management By-law, 2005</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/stormwater-management</code></td>
+            <td class="title-cell">Stormwater Management By-law, 2005</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/filming</b></td>
-            <td>Filming By-law, 2005</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/filming</code></td>
+            <td class="title-cell">Filming By-law, 2005</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2003/water-services</b></td>
-            <td>Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2003/water-services</code></td>
+            <td class="title-cell">Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</b></td>
-            <td>Constitution of Transport for Cape Town By-law, 2013</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</code></td>
+            <td class="title-cell">Constitution of Transport for Cape Town By-law, 2013</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2010/graffiti</b></td>
-            <td>Graffiti By-law, 2010</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2010/graffiti</code></td>
+            <td class="title-cell">Graffiti By-law, 2010</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/stormwater-management</b></td>
-            <td>Stormwater Management By-law, 2005</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/stormwater-management</code></td>
+            <td class="title-cell">Stormwater Management By-law, 2005</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/filming</b></td>
-            <td>Filming By-law, 2005</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/filming</code></td>
+            <td class="title-cell">Filming By-law, 2005</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2003/water-services</b></td>
-            <td>Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2003/water-services</code></td>
+            <td class="title-cell">Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</b></td>
-            <td>Constitution of Transport for Cape Town By-law, 2013</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</code></td>
+            <td class="title-cell">Constitution of Transport for Cape Town By-law, 2013</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2010/graffiti</b></td>
-            <td>Graffiti By-law, 2010</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2010/graffiti</code></td>
+            <td class="title-cell">Graffiti By-law, 2010</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/stormwater-management</b></td>
-            <td>Stormwater Management By-law, 2005</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/stormwater-management</code></td>
+            <td class="title-cell">Stormwater Management By-law, 2005</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/filming</b></td>
-            <td>Filming By-law, 2005</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/filming</code></td>
+            <td class="title-cell">Filming By-law, 2005</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2003/water-services</b></td>
-            <td>Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2003/water-services</code></td>
+            <td class="title-cell">Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</b></td>
-            <td>Constitution of Transport for Cape Town By-law, 2013</td>
-            <td><code>flipper zero</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</code></td>
+            <td class="title-cell">Constitution of Transport for Cape Town By-law, 2013</td>
+            <td><span class="kw-tag">flipper zero</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2010/graffiti</b></td>
-            <td>Graffiti By-law, 2010</td>
-            <td><code>flipper zero</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2010/graffiti</code></td>
+            <td class="title-cell">Graffiti By-law, 2010</td>
+            <td><span class="kw-tag">flipper zero</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/stormwater-management</b></td>
-            <td>Stormwater Management By-law, 2005</td>
-            <td><code>flipper zero</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/stormwater-management</code></td>
+            <td class="title-cell">Stormwater Management By-law, 2005</td>
+            <td><span class="kw-tag">flipper zero</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/filming</b></td>
-            <td>Filming By-law, 2005</td>
-            <td><code>flipper zero</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/filming</code></td>
+            <td class="title-cell">Filming By-law, 2005</td>
+            <td><span class="kw-tag">flipper zero</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2003/water-services</b></td>
-            <td>Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
-            <td><code>flipper zero</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2003/water-services</code></td>
+            <td class="title-cell">Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
+            <td><span class="kw-tag">flipper zero</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</b></td>
-            <td>Constitution of Transport for Cape Town By-law, 2013</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town</code></td>
+            <td class="title-cell">Constitution of Transport for Cape Town By-law, 2013</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2013/constitution-of-transport-for-cape-town/eng@2013-12-06" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2010/graffiti</b></td>
-            <td>Graffiti By-law, 2010</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2010/graffiti</code></td>
+            <td class="title-cell">Graffiti By-law, 2010</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2010/graffiti/eng@2010-07-09" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/stormwater-management</b></td>
-            <td>Stormwater Management By-law, 2005</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/stormwater-management</code></td>
+            <td class="title-cell">Stormwater Management By-law, 2005</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/stormwater-management/eng@2005-09-23" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2005/filming</b></td>
-            <td>Filming By-law, 2005</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2005/filming</code></td>
+            <td class="title-cell">Filming By-law, 2005</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2005/filming/eng@2005-06-24" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="za">
             <td><span class="badge">za</span></td>
-            <td>Laws.Africa</td>
-            <td><b>/akn/za-cpt/act/by-law/2003/water-services</b></td>
-            <td>Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
-            <td><code>dual-use</code></td>
-            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank">View Docket</a></td>
+            <td class="source-cell">Laws.Africa</td>
+            <td><code class="bill-id">/akn/za-cpt/act/by-law/2003/water-services</code></td>
+            <td class="title-cell">Water Services to Limit or Restrict the Use of Water By-law, 2003</td>
+            <td><span class="kw-tag">dual-use</span></td>
+            <td><a href="https://laws.africahttps://api.laws.africa/v3/akn/za-cpt/act/by-law/2003/water-services/eng@2003-03-28" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Russia (RU)">
             <td><span class="badge">Russia (RU)</span></td>
-            <td>State Duma (SOZD)</td>
-            <td><b>Draft Bill (криптография)</b></td>
-            <td>Russian Federal Legislative Activity Monitor: криптография</td>
-            <td><code>криптография</code></td>
-            <td><a href="https://sozd.duma.gov.ru/search?q=криптография" target="_blank">View Docket</a></td>
+            <td class="source-cell">State Duma (SOZD)</td>
+            <td><code class="bill-id">Draft Bill (криптография)</code></td>
+            <td class="title-cell">Russian Federal Legislative Activity Monitor: криптография</td>
+            <td><span class="kw-tag">криптография</span></td>
+            <td><a href="https://sozd.duma.gov.ru/search?q=криптография" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Russia (RU)">
             <td><span class="badge">Russia (RU)</span></td>
-            <td>State Duma (SOZD)</td>
-            <td><b>Draft Bill (3D-принтер)</b></td>
-            <td>Russian Federal Legislative Activity Monitor: 3D-принтер</td>
-            <td><code>3D-принтер</code></td>
-            <td><a href="https://sozd.duma.gov.ru/search?q=3D-принтер" target="_blank">View Docket</a></td>
+            <td class="source-cell">State Duma (SOZD)</td>
+            <td><code class="bill-id">Draft Bill (3D-принтер)</code></td>
+            <td class="title-cell">Russian Federal Legislative Activity Monitor: 3D-принтер</td>
+            <td><span class="kw-tag">3D-принтер</span></td>
+            <td><a href="https://sozd.duma.gov.ru/search?q=3D-принтер" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Russia (RU)">
             <td><span class="badge">Russia (RU)</span></td>
-            <td>State Duma (SOZD)</td>
-            <td><b>Draft Bill (кибербезопасность)</b></td>
-            <td>Russian Federal Legislative Activity Monitor: кибербезопасность</td>
-            <td><code>кибербезопасность</code></td>
-            <td><a href="https://sozd.duma.gov.ru/search?q=кибербезопасность" target="_blank">View Docket</a></td>
+            <td class="source-cell">State Duma (SOZD)</td>
+            <td><code class="bill-id">Draft Bill (кибербезопасность)</code></td>
+            <td class="title-cell">Russian Federal Legislative Activity Monitor: кибербезопасность</td>
+            <td><span class="kw-tag">кибербезопасность</span></td>
+            <td><a href="https://sozd.duma.gov.ru/search?q=кибербезопасность" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Russia (RU)">
             <td><span class="badge">Russia (RU)</span></td>
-            <td>State Duma (SOZD)</td>
-            <td><b>Draft Bill (телеметрия)</b></td>
-            <td>Russian Federal Legislative Activity Monitor: телеметрия</td>
-            <td><code>телеметрия</code></td>
-            <td><a href="https://sozd.duma.gov.ru/search?q=телеметрия" target="_blank">View Docket</a></td>
+            <td class="source-cell">State Duma (SOZD)</td>
+            <td><code class="bill-id">Draft Bill (телеметрия)</code></td>
+            <td class="title-cell">Russian Federal Legislative Activity Monitor: телеметрия</td>
+            <td><span class="kw-tag">телеметрия</span></td>
+            <td><a href="https://sozd.duma.gov.ru/search?q=телеметрия" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Russia (RU)">
             <td><span class="badge">Russia (RU)</span></td>
-            <td>State Duma (SOZD)</td>
-            <td><b>Draft Bill (шифрование)</b></td>
-            <td>Russian Federal Legislative Activity Monitor: шифрование</td>
-            <td><code>шифрование</code></td>
-            <td><a href="https://sozd.duma.gov.ru/search?q=шифрование" target="_blank">View Docket</a></td>
+            <td class="source-cell">State Duma (SOZD)</td>
+            <td><code class="bill-id">Draft Bill (шифрование)</code></td>
+            <td class="title-cell">Russian Federal Legislative Activity Monitor: шифрование</td>
+            <td><span class="kw-tag">шифрование</span></td>
+            <td><a href="https://sozd.duma.gov.ru/search?q=шифрование" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Australia (AU)">
             <td><span class="badge">Australia (AU)</span></td>
-            <td>Parliament of Australia (APH)</td>
-            <td><b>APH-Bill-3D-Printer</b></td>
-            <td>Australian Federal Tech Policy Docket: 3d printer</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=3d printer" target="_blank">View Docket</a></td>
+            <td class="source-cell">Parliament of Australia (APH)</td>
+            <td><code class="bill-id">APH-Bill-3D-Printer</code></td>
+            <td class="title-cell">Australian Federal Tech Policy Docket: 3d printer</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=3d printer" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Australia (AU)">
             <td><span class="badge">Australia (AU)</span></td>
-            <td>Parliament of Australia (APH)</td>
-            <td><b>APH-Bill-Encryption</b></td>
-            <td>Australian Federal Tech Policy Docket: Encryption</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=encryption" target="_blank">View Docket</a></td>
+            <td class="source-cell">Parliament of Australia (APH)</td>
+            <td><code class="bill-id">APH-Bill-Encryption</code></td>
+            <td class="title-cell">Australian Federal Tech Policy Docket: Encryption</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=encryption" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Australia (AU)">
             <td><span class="badge">Australia (AU)</span></td>
-            <td>Parliament of Australia (APH)</td>
-            <td><b>APH-Bill-Telemetry</b></td>
-            <td>Australian Federal Tech Policy Docket: Telemetry</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=telemetry" target="_blank">View Docket</a></td>
+            <td class="source-cell">Parliament of Australia (APH)</td>
+            <td><code class="bill-id">APH-Bill-Telemetry</code></td>
+            <td class="title-cell">Australian Federal Tech Policy Docket: Telemetry</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=telemetry" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Australia (AU)">
             <td><span class="badge">Australia (AU)</span></td>
-            <td>Parliament of Australia (APH)</td>
-            <td><b>APH-Bill-Right-To-Repair</b></td>
-            <td>Australian Federal Tech Policy Docket: Right to repair</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=right to repair" target="_blank">View Docket</a></td>
+            <td class="source-cell">Parliament of Australia (APH)</td>
+            <td><code class="bill-id">APH-Bill-Right-To-Repair</code></td>
+            <td class="title-cell">Australian Federal Tech Policy Docket: Right to repair</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=right to repair" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="Australia (AU)">
             <td><span class="badge">Australia (AU)</span></td>
-            <td>Parliament of Australia (APH)</td>
-            <td><b>APH-Bill-Cybersecurity</b></td>
-            <td>Australian Federal Tech Policy Docket: Cybersecurity</td>
-            <td><code>cybersecurity</code></td>
-            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=cybersecurity" target="_blank">View Docket</a></td>
+            <td class="source-cell">Parliament of Australia (APH)</td>
+            <td><code class="bill-id">APH-Bill-Cybersecurity</code></td>
+            <td class="title-cell">Australian Federal Tech Policy Docket: Cybersecurity</td>
+            <td><span class="kw-tag">cybersecurity</span></td>
+            <td><a href="https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation?q=cybersecurity" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="New Zealand (NZ)">
             <td><span class="badge">New Zealand (NZ)</span></td>
-            <td>New Zealand Legislation (PCO)</td>
-            <td><b>NZ-Act/3D-PRINTER</b></td>
-            <td>New Zealand PCO Docket on 3d printer</td>
-            <td><code>3d printer</code></td>
-            <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_3d printer_resel" target="_blank">View Docket</a></td>
+            <td class="source-cell">New Zealand Legislation (PCO)</td>
+            <td><code class="bill-id">NZ-Act/3D-PRINTER</code></td>
+            <td class="title-cell">New Zealand PCO Docket on 3d printer</td>
+            <td><span class="kw-tag">3d printer</span></td>
+            <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_3d printer_resel" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="New Zealand (NZ)">
             <td><span class="badge">New Zealand (NZ)</span></td>
-            <td>New Zealand Legislation (PCO)</td>
-            <td><b>NZ-Act/ENCRYPTION</b></td>
-            <td>New Zealand PCO Docket on Encryption</td>
-            <td><code>encryption</code></td>
-            <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_encryption_resel" target="_blank">View Docket</a></td>
+            <td class="source-cell">New Zealand Legislation (PCO)</td>
+            <td><code class="bill-id">NZ-Act/ENCRYPTION</code></td>
+            <td class="title-cell">New Zealand PCO Docket on Encryption</td>
+            <td><span class="kw-tag">encryption</span></td>
+            <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_encryption_resel" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="New Zealand (NZ)">
             <td><span class="badge">New Zealand (NZ)</span></td>
-            <td>New Zealand Legislation (PCO)</td>
-            <td><b>NZ-Act/TELEMETRY</b></td>
-            <td>New Zealand PCO Docket on Telemetry</td>
-            <td><code>telemetry</code></td>
-            <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_telemetry_resel" target="_blank">View Docket</a></td>
+            <td class="source-cell">New Zealand Legislation (PCO)</td>
+            <td><code class="bill-id">NZ-Act/TELEMETRY</code></td>
+            <td class="title-cell">New Zealand PCO Docket on Telemetry</td>
+            <td><span class="kw-tag">telemetry</span></td>
+            <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_telemetry_resel" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        <tr>
+        <tr data-jurisdiction="New Zealand (NZ)">
             <td><span class="badge">New Zealand (NZ)</span></td>
-            <td>New Zealand Legislation (PCO)</td>
-            <td><b>NZ-Act/RIGHT-TO-REPAIR</b></td>
-            <td>New Zealand PCO Docket on Right to repair</td>
-            <td><code>right to repair</code></td>
-            <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_right to repair_resel" target="_blank">View Docket</a></td>
+            <td class="source-cell">New Zealand Legislation (PCO)</td>
+            <td><code class="bill-id">NZ-Act/RIGHT-TO-REPAIR</code></td>
+            <td class="title-cell">New Zealand PCO Docket on Right to repair</td>
+            <td><span class="kw-tag">right to repair</span></td>
+            <td><a href="https://www.legislation.govt.nz/all/results.aspx?search=ts_act%40bill%40regulation_right to repair_resel" target="_blank" class="action-btn">View Docket ↗</a></td>
         </tr>
         
-        </tbody>
-    </table>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <script>
+        function filterRadar() {
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            const jurVal = document.getElementById('jurisdictionFilter').value;
+            const rows = document.querySelectorAll('#radarTable tbody tr');
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                const rowJur = row.getAttribute('data-jurisdiction');
+                
+                const matchesSearch = text.includes(searchVal);
+                const matchesJur = (jurVal === 'ALL' || rowJur === jurVal);
+
+                if (matchesSearch && matchesJur) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
 </body>
 </html>
